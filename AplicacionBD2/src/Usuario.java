@@ -6,5 +6,5 @@ public class Usuario {
 	
 	private String nombre;
 	//private Password contraseña;
-	private Map<Date, Integer> caloriass;
+	private Map<Date, Integer> calorias;
 }
