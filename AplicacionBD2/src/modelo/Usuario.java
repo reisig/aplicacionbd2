@@ -9,10 +9,20 @@ public class Usuario {
 	
 	//nombre del usuario, debe ser unico
 	private String nombre;
+	
 	//contraseña se guarda encriptada
 	private String contraseña;
+	
 	//instanciar como TreeMap o SortedMap
 	private Map<Date, Integer> calorias;
+	
+	//encriptador de contraseña
+	BasicTextEncryptor encriptador = new BasicTextEncryptor();
+	
+	public Usuario (String nombre, String contraseña){
+		this.setNombre(nombre);
+		this.setContraseña(contraseña);
+	}
 	
 	public String getNombre() {
 		return nombre;
@@ -23,13 +33,13 @@ public class Usuario {
 	}
 	
 	public String getContraseña() {
-		BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
-		return textEncryptor.decrypt(contraseña);
+		return encriptador.decrypt(contraseña);
 	}
 	
 	public void setContraseña(String contraseña) {
-		BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
-		this.contraseña = textEncryptor.encrypt(contraseña);
+		encriptador.setPassword(contraseña);
+		contraseña = encriptador.encrypt(contraseña);
+		this.contraseña = contraseña;
 	}
 	
 	public Map<Date, Integer> getCalorias() {
