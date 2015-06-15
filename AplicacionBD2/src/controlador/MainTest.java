@@ -1,9 +1,8 @@
 package controlador;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
-import vista.PanelIngreso;
+import vista.PanelProteinas;
 
 import java.awt.BorderLayout;
 
@@ -13,17 +12,20 @@ public class MainTest extends JFrame {
 	
 	
 	public MainTest() {
-		
-		
-		setLocationRelativeTo(null);
+	
 		setVisible(true);
-		JPanel panel = new PanelIngreso();
+			
+		PanelProteinas panel = new PanelProteinas();
 		getContentPane().add(panel, BorderLayout.CENTER);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setSize(600,400);
+		setLocationRelativeTo(null);
+		
 	}
 
 	public static void main(String[] args) {
 		
+		@SuppressWarnings("unused")
 		MainTest nuevo =  new MainTest();
 		
 	}
