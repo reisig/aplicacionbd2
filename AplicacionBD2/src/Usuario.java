@@ -6,9 +6,7 @@ public class Usuario {
 	
 	private String nombre;
 	//private Password contraseña;
-	private Map<Date, Integer> caloriasss;
+	private Map<Date, Integer> calorias;
 	
-	//haciendo un cambio
-	
-	//haciendo otro cambio
+	//
 }
