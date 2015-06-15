@@ -19,6 +19,7 @@ public class MainTest extends JFrame {
 		setVisible(true);
 		JPanel panel = new PanelIngreso();
 		getContentPane().add(panel, BorderLayout.CENTER);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 
 	public static void main(String[] args) {
