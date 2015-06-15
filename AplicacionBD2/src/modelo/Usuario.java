@@ -39,6 +39,4 @@ public class Usuario {
 	public void setCalorias(Map<Date, Integer> calorias) {
 		this.calorias = calorias;
 	}
-	
-	
 }
