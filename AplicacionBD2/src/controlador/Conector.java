@@ -22,18 +22,17 @@ public class Conector {
 		//conexion al host localhost
 		Jedis jedis = new Jedis(host);
 		jedis.connect();
-		
 		//insertar un nuevo usuario
 		jedis.set(u.getNombre(), u.getContraseña());
-		String contraseña = jedis.get("lucho");
-		
-		//probando contraseñas encriptadas....
-		System.out.println("contraseña sin encriptar: "+contraseña);		
-		BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
-		textEncryptor.setPassword(contraseña);
-		String encriptada = textEncryptor.encrypt(contraseña);
-		System.out.println("contraseña encriptada: "+encriptada);
-		System.out.println("contraseña desencriptada: "+textEncryptor.decrypt(encriptada));
+//		String contraseña = jedis.get("lucho");
+//		
+//		//probando contraseñas encriptadas....
+//		System.out.println("contraseña sin encriptar: "+contraseña);		
+//		BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
+//		textEncryptor.setPassword(contraseña);
+//		String encriptada = textEncryptor.encrypt(contraseña);
+//		System.out.println("contraseña encriptada: "+encriptada);
+//		System.out.println("contraseña desencriptada: "+textEncryptor.decrypt(encriptada));
 		
 		//desconexion de redis
 		jedis.disconnect();
