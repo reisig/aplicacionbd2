@@ -1,17 +1,15 @@
-package controlador;
+package vista;
 
 import javax.swing.JFrame;
 
-import vista.PanelProteinas;
-
 import java.awt.BorderLayout;
 
-public class MainTest extends JFrame {
+public class TestVista extends JFrame {
 	
 	private static final long serialVersionUID = -5245463097414240758L;
 	
 	
-	public MainTest() {
+	public TestVista() {
 	
 		setVisible(true);			
 		PanelProteinas panel = new PanelProteinas();
@@ -24,7 +22,7 @@ public class MainTest extends JFrame {
 
 	public static void main(String[] args) {
 		
-		MainTest nuevo =  new MainTest();
+		new TestVista();
 		
 	}
 }

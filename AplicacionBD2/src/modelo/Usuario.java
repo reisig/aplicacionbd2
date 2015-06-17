@@ -1,6 +1,7 @@
 package modelo;
 import java.util.Date;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.jasypt.util.text.BasicTextEncryptor;
 
@@ -14,7 +15,7 @@ public class Usuario {
 	private String contraseña;
 	
 	//instanciar como TreeMap o SortedMap
-	private Map<Date, Integer> calorias;
+	private Map<Date, Integer> proteinas = new TreeMap<Date, Integer>();
 	
 	//encriptador de contraseña
 	BasicTextEncryptor encriptador = new BasicTextEncryptor();
@@ -32,8 +33,12 @@ public class Usuario {
 		this.nombre = nombre;
 	}
 	
-	public String getContraseña() {
+	public String getContraseñaDesencriptada() {
 		return encriptador.decrypt(contraseña);
+	}
+	
+	public String getContraseñaEncriptada(){
+		return contraseña;
 	}
 	
 	public void setContraseña(String contraseña) {
@@ -42,11 +47,11 @@ public class Usuario {
 		this.contraseña = contraseña;
 	}
 	
-	public Map<Date, Integer> getCalorias() {
-		return calorias;
+	public Map<Date, Integer> getProteinas() {
+		return proteinas;
 	}
 	
-	public void setCalorias(Map<Date, Integer> calorias) {
-		this.calorias = calorias;
+	public void setProteinas(Date fecha, int proteinas) {
+		this.proteinas.put(fecha, proteinas);
 	}
 }
