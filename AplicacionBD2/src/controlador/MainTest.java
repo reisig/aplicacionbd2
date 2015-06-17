@@ -13,8 +13,7 @@ public class MainTest extends JFrame {
 	
 	public MainTest() {
 	
-		setVisible(true);
-			
+		setVisible(true);			
 		PanelProteinas panel = new PanelProteinas();
 		getContentPane().add(panel, BorderLayout.CENTER);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -25,7 +24,6 @@ public class MainTest extends JFrame {
 
 	public static void main(String[] args) {
 		
-		@SuppressWarnings("unused")
 		MainTest nuevo =  new MainTest();
 		
 	}
