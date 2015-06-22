@@ -1,5 +1,7 @@
 package controlador;
 
+import java.util.Set;
+
 import redis.clients.jedis.Jedis;
 
 public class Conector extends Jedis{
@@ -15,12 +17,22 @@ public class Conector extends Jedis{
 	}
 	
 	public void conectar(){
-		if(this.isConnected())
+		if(!this.isConnected())
 			this.connect();	
 	}
 	
 	public void desconectar(){
-		this.disconnect();
+		if(this.isConnected()){
+			this.disconnect();
+			this.close();
+		}
 	}
+	
+	public Set getUsuarios(){
+	    this.conectar();
+	    return this.keys("[aA-zZ]*");
+	}
+	
+	
 	
 }

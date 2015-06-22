@@ -25,6 +25,10 @@ public class Usuario {
 		this.setContraseña(contraseña);
 	}
 	
+	public Usuario (String nombre){
+	    
+	}
+	
 	public String getNombre() {
 		return nombre;
 	}
@@ -53,5 +57,10 @@ public class Usuario {
 	
 	public void setProteinas(Date fecha, int proteinas) {
 		this.proteinas.put(fecha, proteinas);
+	}
+
+	public String toString() {
+	    	return "Usuario [nombre=" + nombre + ", contraseña=" + contraseña + ", proteinas=" + proteinas
+	    		+ "]";
 	}
 }
