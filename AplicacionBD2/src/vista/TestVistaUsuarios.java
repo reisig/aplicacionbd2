@@ -271,12 +271,16 @@ public class TestVistaUsuarios extends JFrame {
             private List<String> lista = new ArrayList();
             
             public listaDeUsuarios(){
-        	c = new Conector();
-        	c.conectar();
-        	lista.addAll(c.getUsuarios());
-        	c.desconectar();
-        	c.close();
-        	Collections.sort(lista);
+        	try{
+        	    c = new Conector();
+        	    c.conectar();
+        	    lista.addAll(c.getUsuarios());
+        	    c.desconectar();
+        	    c.close();
+        	    Collections.sort(lista);
+        	}catch(Exception e){
+        	    System.out.println("Debe estar conectado a la base de datos Redis!!!");
+        	}
             }
             
             

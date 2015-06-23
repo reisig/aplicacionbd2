@@ -70,9 +70,12 @@ public class Test {
 			try {
 			    	Conector c = new Conector();
 			    	c.conectar();
-			    	
+			    	c.flushAll();
+			    	Test t = new Test();
+		                t.generarUsuarios();
 				TestVistaUsuarios frame = new TestVistaUsuarios();
-
+				c.disconnect();
+				c.close();
 				frame.repaint();
 				frame.setVisible(true);
 			} catch (Exception e) {

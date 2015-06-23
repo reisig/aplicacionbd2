@@ -1,6 +1,7 @@
 package controlador;
 
 import java.util.Set;
+import java.util.TreeSet;
 
 import redis.clients.jedis.Jedis;
 
@@ -33,6 +34,17 @@ public class Conector extends Jedis{
 	    return this.keys("[aA-zZ]*");
 	}
 	
+	public Set getFechas(){
+	    Set<String> fechas = this.keys("[0-9]*");
+	    Set<String> salida = new TreeSet();
+	    for (String s : fechas) {
+		
+	    }
+	    
+	    
+	    return null;
+	    
+	}
 	
 	
 }
