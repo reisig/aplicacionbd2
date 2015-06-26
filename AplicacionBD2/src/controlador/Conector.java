@@ -1,5 +1,8 @@
 package controlador;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -34,15 +37,14 @@ public class Conector extends Jedis{
 	    return this.keys("[aA-zZ]*");
 	}
 	
-	public Set getFechas(){
+	public List getFechas(String nombreUsuario){
 	    Set<String> fechas = this.keys("[0-9]*");
 	    Set<String> salida = new TreeSet();
-	    
 	    for (String s : fechas) {
-		
+		List<Map> lista = new ArrayList();
+		lista.add(this.hgetAll(s));
 	    }
-	    
 	    return null;
-	    
+
 	}
 }

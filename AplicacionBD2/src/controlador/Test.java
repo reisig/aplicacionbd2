@@ -4,48 +4,41 @@ import java.awt.EventQueue;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 
-import javax.swing.AbstractListModel;
-
-import org.jasypt.util.text.BasicTextEncryptor;
-
-import vista.TestVistaUsuarios;
 import modelo.Usuario;
+import vista.TestVistaUsuarios;
 
 public class Test {
 	
-	Conector c;
+	Conector jedis;
 	DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-	static List<Usuario>     usuarios = new LinkedList<Usuario>();
+	List<Usuario> listaUsuarios;
+	
+	public Test(){
+	    jedis = new Conector();
+	    jedis.conectar();
+	}
 	
 	public void generarUsuarios() throws ParseException{
-		
-		c = new Conector();
-		c.conectar();
-		c.flushAll();
 		Usuario u = null;
+		listaUsuarios = new ArrayList();
 
 		for (int i = 1; i <= 100; i++) {
 			u = new Usuario("Usuario"+i, "clave"+i);
-			System.out.println("SET "+u.getNombre()+","+u.getContraseñaEncriptada()+": "+c.set(u.getNombre(), u.getContraseñaEncriptada()));
+			System.out.println("SET "+u.getNombre()+","+u.getContraseñaEncriptada()+": "+jedis.set(u.getNombre(), u.getContraseñaEncriptada()));
 			for (int j = 0; j < 10; j++) {
 				Date fecha = generarFecha();
 				int proteinas = (int) (Math.random() * (300 - 100)) + 100;
 				u.setProteinas(fecha, proteinas);
 				System.out.println("HSET "+u.getNombre()+", "+df.format(fecha)+", "+String.valueOf(u.getProteinas().get(fecha))+": "
-									+c.hset(df.format(fecha), u.getNombre(), String.valueOf(u.getProteinas().get(fecha))));
+									+jedis.hset(df.format(fecha), u.getNombre(), String.valueOf(u.getProteinas().get(fecha))));
 				
 			}
-			usuarios.add(u);
-		}
-		c.desconectar();
-		c.close();		
+			listaUsuarios.add(u);
+		}	
 	}
 	
 	public Date generarFecha() throws ParseException{
@@ -61,58 +54,23 @@ public class Test {
 	
 	
 	public static void main(String[] args) throws ParseException {
-	  
+	    
 	  EventQueue.invokeLater(new Runnable() {
 		public void run() {
 			try {
-			    	Conector c = new Conector();
-			    	c.conectar();
-			    	c.flushAll();
-			    	Test t = new Test();
-		                t.generarUsuarios();
+			    	Test test = new Test();
 				TestVistaUsuarios frame = new TestVistaUsuarios();
-				c.disconnect();
-				c.close();
 				frame.repaint();
 				frame.setVisible(true);
+				test.jedis.desconectar();
+				test.jedis.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-	});
+	  });
 	  
-//	  EventQueue.invokeLater(new Runnable() {
-//        public void run() {
-//            try {
-//                MainFrame frame = new MainFrame();
-//                Test t = new Test();
-//                t.generarUsuarios();
-//                String[] nombres = new String[usuarios.size()];
-//                for (int i = 0; i < usuarios.size(); i++) {
-//                  nombres[i] = usuarios.get(i).getNombre();                 
-//                }
-//                frame.getListUsuarios().setModel(new AbstractListModel() {
-//                  String[] values = nombres;
-//                  public int getSize() {
-//                    return values.length;
-//                  }
-//                  public Object getElementAt(int index) {
-//                    return values[index];
-//                  }
-//                });
-//                frame.setVisible(true);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    });
-		
-	  
-
-	    
 	
-		
-		
 	
 //		//usuario de prueba
 //		Usuario u = new Usuario ("lucho", "lucho123");
@@ -120,7 +78,6 @@ public class Test {
 		//conexion al host localhost
 //		Conector c = new Conector();
 //		c.conectar();		
-		
 //		
 //		//borrar todo, usar con cuidado!!!!!
 //		c.flushAll();
