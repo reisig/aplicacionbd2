@@ -49,6 +49,7 @@ public class Test {
 	}
 	
 	public Date generarFecha() throws ParseException{
+		
 		int dia = (int) (Math.random() * (31 - 1)) + 1;
 		int mes = (int) (Math.random() * (12 - 1)) + 1;
 		int año = 2015;
@@ -58,12 +59,8 @@ public class Test {
 		return df.parse(dia+"/"+mes+"/"+año);
 	}
 	
-
-	
 	
 	public static void main(String[] args) throws ParseException {
-	  
-	  
 	  
 	  EventQueue.invokeLater(new Runnable() {
 		public void run() {

@@ -19,7 +19,7 @@ public class Conector extends Jedis{
 	
 	public void conectar(){
 		if(!this.isConnected())
-			this.connect();	
+			this.connect();
 	}
 	
 	public void desconectar(){
@@ -37,14 +37,12 @@ public class Conector extends Jedis{
 	public Set getFechas(){
 	    Set<String> fechas = this.keys("[0-9]*");
 	    Set<String> salida = new TreeSet();
+	    
 	    for (String s : fechas) {
 		
 	    }
 	    
-	    
 	    return null;
 	    
 	}
-	
-	
 }
