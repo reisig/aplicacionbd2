@@ -23,6 +23,7 @@ public class Test {
 	}
 	
 	public void generarUsuarios() throws ParseException{
+	    
 		Usuario u = null;
 		listaUsuarios = new ArrayList();
 

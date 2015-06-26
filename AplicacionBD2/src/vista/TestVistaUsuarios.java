@@ -267,8 +267,9 @@ public class TestVistaUsuarios extends JFrame {
         }
   
         class listaDeUsuarios extends AbstractListModel{
-            
-            private List<String> lista = new ArrayList();
+
+	    private static final long serialVersionUID = -7516169186834814283L;
+	    private List<String> lista = new ArrayList();
             
             public listaDeUsuarios(){
         	try{
