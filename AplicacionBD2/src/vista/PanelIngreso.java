@@ -117,24 +117,28 @@ public class PanelIngreso extends JPanel implements ActionListener{
 	}
 	
 	private boolean usuarioExiste(String nombre){
+		
 		if(conector.exists(nombre))
 		    return true;
 		else{
-		    return false;
+			 JOptionPane.showMessageDialog(null,"No existe el usuario:  "+nombre,"Error" ,JOptionPane.ERROR_MESSAGE);	
+			 return false;
 		}
+		   
 	}
 	
 	private boolean contraseñaCorrecta(String nombre, String password){
+		
 	    BasicTextEncryptor encriptador = new BasicTextEncryptor();
 	    encriptador.setPassword(password);
 	    
 	    if(encriptador.decrypt(conector.get(nombre)).equals(password))
-		return true;
-	    
-	    else
-		return false;
+	    	return true;
+	    else{
+	    	JOptionPane.showMessageDialog(null,"Contraseña incorrecta","Error" ,JOptionPane.ERROR_MESSAGE);
+	    	return false;
+	    }
 	}
-	
 	
 	
 	
@@ -142,14 +146,18 @@ public class PanelIngreso extends JPanel implements ActionListener{
 		
 		Object evento = e.getSource();
 		
-		
 		if (evento == btnIngresar){
 			
 			if (comprobarCondiciones()){
 				
-				System.out.println("Tela");
+				if(usuarioExiste(tfUsuario.getText())){
+					
+					if(contraseñaCorrecta(tfUsuario.getText(),String.valueOf(pfContrasena.getPassword()))){
+						
+						//tela
+					}
+				}
 			}
 		}
-		
 	}
 }
