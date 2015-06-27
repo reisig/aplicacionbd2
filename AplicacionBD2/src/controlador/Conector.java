@@ -2,9 +2,7 @@ package controlador;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 import redis.clients.jedis.Jedis;
 
@@ -33,18 +31,21 @@ public class Conector extends Jedis{
 	}
 	
 	public Set getUsuarios(){
-	    this.conectar();
 	    return this.keys("[aA-zZ]*");
 	}
 	
 	public List getFechas(String nombreUsuario){
 	    Set<String> fechas = this.keys("[0-9]*");
-	    Set<String> salida = new TreeSet();
+	    List<String> salida = new ArrayList();
 	    for (String s : fechas) {
-		List<Map> lista = new ArrayList();
-		lista.add(this.hgetAll(s));
+		if(this.hexists(s, nombreUsuario)){
+		    salida.add(s);
+		}
 	    }
-	    return null;
-
+	    return salida;
+	}
+	
+	public String getProteinas(String nombre, String fecha){
+	    return this.hget(fecha,nombre);    
 	}
 }

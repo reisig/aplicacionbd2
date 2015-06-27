@@ -36,7 +36,6 @@ public class Test {
 				u.setProteinas(fecha, proteinas);
 				System.out.println("HSET "+u.getNombre()+", "+df.format(fecha)+", "+String.valueOf(u.getProteinas().get(fecha))+": "
 									+jedis.hset(df.format(fecha), u.getNombre(), String.valueOf(u.getProteinas().get(fecha))));
-				
 			}
 			listaUsuarios.add(u);
 		}	

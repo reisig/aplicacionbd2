@@ -12,8 +12,11 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import java.awt.SystemColor;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.JSeparator;
@@ -21,7 +24,12 @@ import javax.swing.SwingConstants;
 import javax.swing.AbstractListModel;
 
 import controlador.Conector;
+
 import javax.swing.JScrollPane;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
+
+import modelo.Strings;
 
 public class TestVistaUsuarios extends JFrame {
 
@@ -45,15 +53,13 @@ public class TestVistaUsuarios extends JFrame {
   private JSeparator separator_3;
   private Conector c;
   private JScrollPane scrollPane;
-
-	/**
+  /**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				try {
-	
+				try {	
 					TestVistaUsuarios frame = new TestVistaUsuarios();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -197,20 +203,28 @@ public class TestVistaUsuarios extends JFrame {
 		}
 		return panelProteinas;
 	}
+	
 	public JLabel getLblUsuarios() {
 		if (lblUsuarios == null) {
 			lblUsuarios = new JLabel("Usuarios");
 		}
 		return lblUsuarios;
 	}
+	
 	public JList getListUsuarios() {
 		if (listUsuarios == null) {
 			listUsuarios = new JList();
+			listUsuarios.addListSelectionListener(new ListSelectionListener() {
+				public void valueChanged(ListSelectionEvent arg0) {
+				    listFechas.setModel(new listaDeFechas(String.valueOf(listUsuarios.getSelectedValue())));
+				}
+			});
 			listUsuarios.setModel(new listaDeUsuarios());
 			listUsuarios.setBackground(SystemColor.menu);
 		}
 		return listUsuarios;
 	}
+	
 	public JLabel getLblFechas() {
 		if (lblFechas == null) {
 			lblFechas = new JLabel("Fechas");
@@ -221,6 +235,12 @@ public class TestVistaUsuarios extends JFrame {
 	public JList getListFechas() {
 		if (listFechas == null) {
 			listFechas = new JList();
+			listFechas.addListSelectionListener(new ListSelectionListener() {
+				public void valueChanged(ListSelectionEvent e) {
+				    listProteinas.setModel(new listaDeProteinas(String.valueOf(listUsuarios.getSelectedValue()), 
+					    					String.valueOf(listFechas.getSelectedValue())));
+				}
+			});
 			listFechas.setBackground(SystemColor.menu);
 		}
 		return listFechas;
@@ -240,24 +260,28 @@ public class TestVistaUsuarios extends JFrame {
 		}
 		return listProteinas;
 	}
+	
         public JSeparator getSeparator() {
           if (separator == null) {
           	separator = new JSeparator();
           }
           return separator;
         }
+        
         public JSeparator getSeparator_1() {
           if (separator_1 == null) {
           	separator_1 = new JSeparator();
           }
           return separator_1;
         }
+        
         public JSeparator getSeparator_2() {
           if (separator_2 == null) {
           	separator_2 = new JSeparator();
           }
           return separator_2;
         }
+        
         public JSeparator getSeparator_3() {
           if (separator_3 == null) {
           	separator_3 = new JSeparator();
@@ -278,14 +302,12 @@ public class TestVistaUsuarios extends JFrame {
         	    lista.addAll(c.getUsuarios());
         	    c.desconectar();
         	    c.close();
-        	    Collections.sort(lista);
+        	    Collections.sort(lista, Strings.getNaturalComparator());
         	}catch(Exception e){
         	    System.out.println("Debe estar conectado a la base de datos Redis!!!");
         	}
             }
             
-            
-
 	    public Object getElementAt(int index) {
 		return lista.get(index);
 	    }
@@ -294,6 +316,63 @@ public class TestVistaUsuarios extends JFrame {
 		return lista.size();
 	    }
             
+        }
+        
+        class listaDeFechas extends AbstractListModel{
+            
+	    private static final long serialVersionUID = -4052141478947131221L;
+	    private List<String> lista = new ArrayList();
+            
+            public listaDeFechas(String nombreUsuario){
+        	try{
+        	    c = new Conector();
+        	    c.conectar();
+        	    lista.addAll(c.getFechas(nombreUsuario));
+//        	    c.desconectar();
+//        	    c.close();
+        	    Collections.sort(lista, Strings.getNaturalComparator());
+        	}catch(Exception e){
+        	    System.out.println("Debe estar conectado a la base de datos Redis!!!");
+        	}
+            }            
+
+	    public Object getElementAt(int index) {
+		return lista.get(index);
+	    }
+
+	    public int getSize() {
+		return lista.size();
+	    }           
+            
+        }
+        
+        class listaDeProteinas extends AbstractListModel{
+            
+            private static final long serialVersionUID = -4052141478947131221L;
+	    private List<String> lista = new ArrayList();
+            
+            public listaDeProteinas(String nombreUsuario, String fecha){
+        	try{
+        	    c = new Conector();
+        	    c.conectar();
+        	    lista.add(c.getProteinas(nombreUsuario, fecha));
+        	    c.desconectar();
+        	    c.close();
+        	    Collections.sort(lista, Strings.getNaturalComparator());
+        	}catch(Exception e){
+        	    e.printStackTrace();
+        	}
+            }            
+
+	    public Object getElementAt(int index) {
+		return lista.get(index);
+	    }
+
+	    public int getSize() {
+		return lista.size();
+	    }   
+
+
             
         }
   
