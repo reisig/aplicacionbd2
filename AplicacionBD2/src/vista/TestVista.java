@@ -1,6 +1,7 @@
 package vista;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import java.awt.BorderLayout;
 
@@ -12,7 +13,7 @@ public class TestVista extends JFrame {
 	public TestVista() {
 	
 		setVisible(true);			
-		PanelProteinas panel = new PanelProteinas();
+		JPanel panel = new PanelCrearUsuario();
 		getContentPane().add(panel, BorderLayout.CENTER);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(600,400);

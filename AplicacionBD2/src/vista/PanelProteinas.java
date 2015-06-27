@@ -24,7 +24,6 @@ public class PanelProteinas extends JPanel implements ActionListener {
 		setLayout(null);
 		setSize(600,400);
 		
-		
 		JLabel lblIngresarProteinas = new JLabel("Ingresar proteinas");
 		lblIngresarProteinas.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 20));
 		lblIngresarProteinas.setBounds(190, 37, 192, 25);
