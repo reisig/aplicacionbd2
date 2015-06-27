@@ -26,9 +26,9 @@ public class PanelCrearUsuario extends JPanel implements ActionListener {
 		setLayout(null);
 		setVisible(true);
 		
-		JLabel titulo = new JLabel("Crear/Editar  Usuario");
+		JLabel titulo = new JLabel("Crear Usuario");
 		titulo.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 20));
-		titulo.setBounds(136, 38, 245, 33);
+		titulo.setBounds(199, 45, 163, 33);
 		add(titulo);
 		
 		JLabel lblUsuario = new JLabel("Usuario: ");
@@ -98,7 +98,6 @@ public class PanelCrearUsuario extends JPanel implements ActionListener {
 	
 	
 	public void crearUsuario(){
-		
 		
 		Conector jedis = new Conector();
 		Usuario nuevo = new Usuario(tfUsuario.getText(),tfContrasena.getText());

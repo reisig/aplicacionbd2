@@ -13,7 +13,7 @@ public class TestVista extends JFrame {
 	public TestVista() {
 	
 		setVisible(true);			
-		JPanel panel = new PanelCrearUsuario();
+		JPanel panel = new PanelProteinas("Gonen");
 		getContentPane().add(panel, BorderLayout.CENTER);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(600,400);

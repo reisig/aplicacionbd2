@@ -2,15 +2,29 @@ package vista;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+
 import java.awt.Font;
+
 import com.toedter.calendar.JCalendar;
+
+import controlador.Conector;
+
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.border.LineBorder;
+
+import modelo.Usuario;
+
 import java.awt.Color;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class PanelProteinas extends JPanel implements ActionListener {
 	
@@ -18,8 +32,11 @@ public class PanelProteinas extends JPanel implements ActionListener {
 	private JTextField tfProteinas;
 	private JButton btnIngresar;
 	private JCalendar calendar;
+	private String usuario;
 	
-	public PanelProteinas() {
+	public PanelProteinas(String usuarioConectado) {
+		
+		usuario = usuarioConectado;
 		
 		setLayout(null);
 		setSize(600,400);
@@ -97,6 +114,28 @@ public class PanelProteinas extends JPanel implements ActionListener {
 	}
 	
 
+	public void insertarProteinas() throws ParseException{
+		
+		Conector jedis = new Conector();
+		Usuario nuevo = new Usuario(usuario);
+		DateFormat sdf = new SimpleDateFormat("dd/M/yyyy");
+		
+		Integer.parseInt(tfProteinas.getText()); 
+		jedis.conectar();
+		
+		@SuppressWarnings("deprecation")
+		String dia = calendar.getDate().getDay()+"/"+calendar.getDate().getMonth()+"/"+calendar.getDate().getYear();
+		
+		Date fecha = sdf.parse(dia);
+		System.out.println(sdf.format(fecha));
+		
+		//System.out.println(jedis.hset(df.format(fecha), nuevo.getNombre(), String.valueOf(u.getProteinas().get(fecha))));
+		jedis.disconnect();
+		
+		jedis.close();
+	}
+	
+	
 	public void actionPerformed(ActionEvent e){
 
 		Object evento = e.getSource();

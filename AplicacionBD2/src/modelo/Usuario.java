@@ -26,7 +26,7 @@ public class Usuario {
 	}
 	
 	public Usuario (String nombre){
-	    
+		this.setNombre(nombre);
 	}
 	
 	public String getNombre() {
