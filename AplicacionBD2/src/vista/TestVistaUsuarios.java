@@ -335,6 +335,9 @@ public class TestVistaUsuarios extends JFrame {
 			    return o1.compareTo(o2);
 			}
         	    });
+//        	    while(lista.size()>5){
+//        		lista.remove(0);
+//        	    }
         	}catch(Exception e){
         	    System.out.println("Debe estar conectado a la base de datos Redis!!!");
         	}

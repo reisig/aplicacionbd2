@@ -117,14 +117,14 @@ public class PanelProteinas extends JPanel implements ActionListener {
 		
 		Conector jedis = new Conector();
 		Usuario nuevo = new Usuario(usuario);
-		DateFormat sdf = new SimpleDateFormat("dd/M/yyyy");
+		DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		
 		jedis.conectar();
 		
 		Date fecha = calendar.getDate();
-		System.out.println(jedis.hset(sdf.format(fecha), nuevo.getNombre(),tfProteinas.getText()));
-		jedis.disconnect();
-		
+		System.out.println("HSET: "+sdf.format(fecha)+", "+nuevo.getNombre()+", "+tfProteinas.getText()+": "+
+					    jedis.hset(sdf.format(fecha), nuevo.getNombre(),tfProteinas.getText()));
+		jedis.disconnect();		
 		jedis.close();
 	}
 	
