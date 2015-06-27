@@ -13,6 +13,8 @@ import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
 
+import modelo.Usuario;
+
 import org.jasypt.util.text.BasicTextEncryptor;
 
 import controlador.Conector;
@@ -28,6 +30,17 @@ public class PanelIngreso extends JPanel implements ActionListener{
 	private JPasswordField pfContrasena;
 	private JButton btnIngresar;
 	private Conector conector;
+	private Usuario user;
+
+	public Usuario getUser() {
+	    return user;
+	}
+
+
+	public void setUser(Usuario user) {
+	    this.user = user;
+	}
+
 
 	public PanelIngreso(Conector c) {
 	    	
@@ -153,7 +166,7 @@ public class PanelIngreso extends JPanel implements ActionListener{
 				if(usuarioExiste(tfUsuario.getText())){
 					
 					if(contraseñaCorrecta(tfUsuario.getText(),String.valueOf(pfContrasena.getPassword()))){
-						
+						user = new Usuario (tfUsuario.getText());
 						//tela
 					}
 				}

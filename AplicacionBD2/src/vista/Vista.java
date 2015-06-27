@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
+import modelo.Usuario;
 import controlador.Conector;
 
 public class Vista extends JFrame {
@@ -52,6 +53,9 @@ public class Vista extends JFrame {
     private Component horizontalGlue;
     private Conector conector;
     private JLabel lblEstado;
+    private Usuario user = null;
+    private PanelIngreso panelIngreso;
+    private PanelListaUsuarios panelListaUsuarios;
 
     public static void main(String[] args) {
 	EventQueue.invokeLater(new Runnable() {
@@ -83,12 +87,14 @@ public class Vista extends JFrame {
 	contentPane.setLayout(new CardLayout(0, 0));
 	
 	contentPane.add(getPanelInicio(), "PanelInicio");
-	contentPane.add(new PanelIngreso(conector), "PanelInicioSesion");
+	panelIngreso = new PanelIngreso(conector);
+	contentPane.add(panelIngreso, "PanelInicioSesion");
 	
 	cl = (CardLayout)contentPane.getLayout();
 	contentPane.add(new PanelCrearUsuario(conector), "PanelCrearUsuario");
-	contentPane.add(new TestVistaUsuarios(conector), "PanelListarUsuarios");
-	contentPane.add(getPanelEditarUsuarios(), "PanelEditarUsuarios");
+	panelListaUsuarios = new PanelListaUsuarios(conector);
+	contentPane.add(panelListaUsuarios, "PanelListarUsuarios");
+	contentPane.add(new PanelEditarUsuario(), "PanelEditarUsuarios");
 	
 	ocultarOpciones();
 	
@@ -164,6 +170,7 @@ public class Vista extends JFrame {
 			mntmListarUsuarios.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 				    cl.show(contentPane, "PanelListarUsuarios");
+				    panelListaUsuarios.setUsuarios();
 				}
 			});
 		}

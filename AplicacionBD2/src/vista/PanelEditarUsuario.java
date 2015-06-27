@@ -19,9 +19,13 @@ public class PanelEditarUsuario extends JPanel implements ActionListener {
 	private JTextField tfConfirmar;
 	private JTextField tfContrasena;
 	private JButton btnIngresar;
-    private String usuario;
-    private JTextField tfUsuario;
-    private JTextField tfContraseñaActual;
+        private String usuario;
+        private JTextField tfUsuario;
+        private JTextField tfContraseñaActual;
+        
+        public PanelEditarUsuario() {
+	    
+	}
 	
 	public PanelEditarUsuario(String nombreUsuario){
 		
@@ -74,6 +78,10 @@ public class PanelEditarUsuario extends JPanel implements ActionListener {
 		tfContraseñaActual.setBounds(197, 156, 155, 20);
 		add(tfContraseñaActual);
 		tfContraseñaActual.setColumns(10);
+	}
+	
+	public void setNombre (String nombre){
+	    this.usuario = nombre;
 	}
 	
 	

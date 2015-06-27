@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 import modelo.Usuario;
-import vista.TestVistaUsuarios;
+import vista.PanelListaUsuarios;
 
 public class Test {
 	
