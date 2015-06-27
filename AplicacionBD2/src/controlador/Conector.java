@@ -1,6 +1,10 @@
 package controlador;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -36,10 +40,15 @@ public class Conector extends Jedis{
 	
 	public List getFechas(String nombreUsuario){
 	    Set<String> fechas = this.keys("[0-9]*");
-	    List<String> salida = new ArrayList();
+	    List<Date> salida = new ArrayList();
+	    DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 	    for (String s : fechas) {
 		if(this.hexists(s, nombreUsuario)){
-		    salida.add(s);
+		    try {
+			salida.add(df.parse(s));
+		    } catch (ParseException e) {
+			e.printStackTrace();
+		    }
 		}
 	    }
 	    return salida;

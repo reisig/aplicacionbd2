@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.JSeparator;
@@ -33,9 +34,6 @@ import modelo.Strings;
 
 public class TestVistaUsuarios extends JFrame {
 
-	/**
-   * 
-   */
   private static final long serialVersionUID = 6917697380717321353L;
   private JPanel contentPane;
   private JPanel panelUsuarios;
@@ -53,9 +51,7 @@ public class TestVistaUsuarios extends JFrame {
   private JSeparator separator_3;
   private Conector c;
   private JScrollPane scrollPane;
-  /**
-	 * Launch the application.
-	 */
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -69,9 +65,6 @@ public class TestVistaUsuarios extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
 	public TestVistaUsuarios() {
 	    	c = new Conector ();
 	    	c.conectar();
@@ -289,6 +282,14 @@ public class TestVistaUsuarios extends JFrame {
           }
           return separator_3;
         }
+        
+	public JScrollPane getScrollPane() {
+		if (scrollPane == null) {
+			scrollPane = new JScrollPane();
+			scrollPane.setViewportView(getListUsuarios());
+		}
+		return scrollPane;
+	}
   
         class listaDeUsuarios extends AbstractListModel{
 
@@ -314,30 +315,34 @@ public class TestVistaUsuarios extends JFrame {
 
 	    public int getSize() {
 		return lista.size();
-	    }
-            
+	    }            
         }
         
         class listaDeFechas extends AbstractListModel{
-            
+                       
 	    private static final long serialVersionUID = -4052141478947131221L;
-	    private List<String> lista = new ArrayList();
+	    private List<Date> lista = new ArrayList();
             
             public listaDeFechas(String nombreUsuario){
         	try{
         	    c = new Conector();
         	    c.conectar();
         	    lista.addAll(c.getFechas(nombreUsuario));
-//        	    c.desconectar();
-//        	    c.close();
-        	    Collections.sort(lista, Strings.getNaturalComparator());
+        	    c.desconectar();
+        	    c.close();
+        	    Collections.sort(lista, new Comparator<Date>(){
+			public int compare(Date o1, Date o2) {
+			    return o1.compareTo(o2);
+			}
+        	    });
         	}catch(Exception e){
         	    System.out.println("Debe estar conectado a la base de datos Redis!!!");
         	}
             }            
 
 	    public Object getElementAt(int index) {
-		return lista.get(index);
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+		return df.format(lista.get(index));
 	    }
 
 	    public int getSize() {
@@ -370,17 +375,7 @@ public class TestVistaUsuarios extends JFrame {
 
 	    public int getSize() {
 		return lista.size();
-	    }   
-
-
-            
+	    }            
         }
   
-	public JScrollPane getScrollPane() {
-		if (scrollPane == null) {
-			scrollPane = new JScrollPane();
-			scrollPane.setViewportView(getListUsuarios());
-		}
-		return scrollPane;
-	}
 }
