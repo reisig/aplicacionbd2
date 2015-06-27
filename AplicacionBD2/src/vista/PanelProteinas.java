@@ -23,7 +23,6 @@ import java.awt.Color;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 public class PanelProteinas extends JPanel implements ActionListener {
@@ -120,16 +119,10 @@ public class PanelProteinas extends JPanel implements ActionListener {
 		Usuario nuevo = new Usuario(usuario);
 		DateFormat sdf = new SimpleDateFormat("dd/M/yyyy");
 		
-		Integer.parseInt(tfProteinas.getText()); 
 		jedis.conectar();
 		
-		@SuppressWarnings("deprecation")
-		String dia = calendar.getDate().getDay()+"/"+calendar.getDate().getMonth()+"/"+calendar.getDate().getYear();
-		
-		Date fecha = sdf.parse(dia);
-		System.out.println(sdf.format(fecha));
-		
-		//System.out.println(jedis.hset(df.format(fecha), nuevo.getNombre(), String.valueOf(u.getProteinas().get(fecha))));
+		Date fecha = calendar.getDate();
+		System.out.println(jedis.hset(sdf.format(fecha), nuevo.getNombre(),tfProteinas.getText()));
 		jedis.disconnect();
 		
 		jedis.close();
@@ -144,8 +137,12 @@ public class PanelProteinas extends JPanel implements ActionListener {
 			
 			if (comprobarCondiciones()){
 				
-				System.out.println(tfProteinas.getText());
-				System.out.println(calendar.getDate());
+				try {
+					insertarProteinas();
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		}
 	}
