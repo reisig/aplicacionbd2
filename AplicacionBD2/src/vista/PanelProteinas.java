@@ -70,8 +70,7 @@ public class PanelProteinas extends JPanel implements ActionListener {
 		
 		
 		try{	
-			 @SuppressWarnings("unused")
-			int numero = Integer.parseInt(entrada); 
+			Integer.parseInt(entrada); 
 	     
 		}catch (NumberFormatException e1){
 		

@@ -25,7 +25,7 @@ import javax.swing.border.EmptyBorder;
 
 import controlador.Conector;
 
-public class MainFrame extends JFrame {
+public class Vista extends JFrame {
 
     private static final long serialVersionUID = -908688069079632214L;
     private JPanel contentPane;
@@ -59,7 +59,7 @@ public class MainFrame extends JFrame {
 		try {
 		    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		    Conector c  = new Conector();
-		    MainFrame frame = new MainFrame(c);
+		    Vista frame = new Vista(c);
 		    frame.setVisible(true);
 		} catch (Exception e) {
 		    e.printStackTrace();
@@ -68,11 +68,11 @@ public class MainFrame extends JFrame {
 	});
     }
 
-    public MainFrame(Conector c) {
+    public Vista(Conector c) {
 	
 	this.conector = c;
 	
-    	setIconImage(Toolkit.getDefaultToolkit().getImage(MainFrame.class.getResource("/vista/img/redis-icon.png")));
+    	setIconImage(Toolkit.getDefaultToolkit().getImage(Vista.class.getResource("/vista/img/redis-icon.png")));
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	setBounds(100, 100, 640, 480);
 	setJMenuBar(getMenuBar_1());
@@ -87,7 +87,7 @@ public class MainFrame extends JFrame {
 	
 	cl = (CardLayout)contentPane.getLayout();
 	contentPane.add(new PanelCrearUsuario(conector), "PanelCrearUsuario");
-	contentPane.add(getPanelListarUsuarios(), "PanelListarUsuarios");
+	contentPane.add(new TestVistaUsuarios(conector), "PanelListarUsuarios");
 	contentPane.add(getPanelEditarUsuarios(), "PanelEditarUsuarios");
 	
 	ocultarOpciones();
@@ -172,7 +172,7 @@ public class MainFrame extends JFrame {
 	public JLabel getLblNewLabel() {
 		if (lblNewLabel == null) {
 			lblNewLabel = new JLabel("");
-			lblNewLabel.setIcon(new ImageIcon(MainFrame.class.getResource("/vista/img/redis.png")));
+			lblNewLabel.setIcon(new ImageIcon(Vista.class.getResource("/vista/img/redis.png")));
 		}
 		return lblNewLabel;
 	}

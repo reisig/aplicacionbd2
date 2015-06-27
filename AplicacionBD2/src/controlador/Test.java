@@ -53,22 +53,22 @@ public class Test {
 	}
 	
 	
-	public static void main(String[] args) throws ParseException {
-	    
-	  EventQueue.invokeLater(new Runnable() {
-		public void run() {
-			try {
-			    	Test test = new Test();
-				TestVistaUsuarios frame = new TestVistaUsuarios();
-				frame.repaint();
-				frame.setVisible(true);
-				test.jedis.desconectar();
-				test.jedis.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	  });
+//	public static void main(String[] args) throws ParseException {
+//	    
+//	  EventQueue.invokeLater(new Runnable() {
+//		public void run() {
+//			try {
+//			    	Test test = new Test();
+//				TestVistaUsuarios frame = new TestVistaUsuarios();
+//				frame.repaint();
+//				frame.setVisible(true);
+//				test.jedis.desconectar();
+//				test.jedis.close();
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//		}
+//	  });
 	  
 	
 	
@@ -124,7 +124,7 @@ public class Test {
 //		//desconexion de redis
 //		c.desconectar();
 //		c.close();
-	}
+//	}
 	
 
 }

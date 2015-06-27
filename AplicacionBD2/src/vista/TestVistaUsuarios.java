@@ -1,16 +1,8 @@
 package vista;
 
-import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
 import java.awt.SystemColor;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -20,19 +12,21 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.AbstractListModel;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
-import javax.swing.AbstractListModel;
-
-import controlador.Conector;
-
-import javax.swing.JScrollPane;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import modelo.Strings;
+import controlador.Conector;
 
-public class TestVistaUsuarios extends JFrame {
+public class TestVistaUsuarios extends JPanel {
 
   private static final long serialVersionUID = 6917697380717321353L;
   private JPanel contentPane;
@@ -49,30 +43,18 @@ public class TestVistaUsuarios extends JFrame {
   private JSeparator separator_1;
   private JSeparator separator_2;
   private JSeparator separator_3;
-  private Conector c;
+  private Conector conector;
   private JScrollPane scrollPane;
 
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {	
-					TestVistaUsuarios frame = new TestVistaUsuarios();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
-	public TestVistaUsuarios() {
-	    	c = new Conector ();
-	    	c.conectar();
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	public TestVistaUsuarios(Conector c) {
+	    	
+	    	this.conector = c;
+	    
+
 		setBounds(100, 100, 640, 480);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();
 		gbl_contentPane.columnWidths = new int[]{0, 0, 0, 0};
 		gbl_contentPane.rowHeights = new int[]{0, 0, 0};
@@ -298,11 +280,11 @@ public class TestVistaUsuarios extends JFrame {
             
             public listaDeUsuarios(){
         	try{
-        	    c = new Conector();
-        	    c.conectar();
-        	    lista.addAll(c.getUsuarios());
-        	    c.desconectar();
-        	    c.close();
+        	    conector = new Conector();
+        	    conector.conectar();
+        	    lista.addAll(conector.getUsuarios());
+        	    conector.desconectar();
+        	    conector.close();
         	    Collections.sort(lista, Strings.getNaturalComparator());
         	}catch(Exception e){
         	    System.out.println("Debe estar conectado a la base de datos Redis!!!");
@@ -325,19 +307,19 @@ public class TestVistaUsuarios extends JFrame {
             
             public listaDeFechas(String nombreUsuario){
         	try{
-        	    c = new Conector();
-        	    c.conectar();
-        	    lista.addAll(c.getFechas(nombreUsuario));
-        	    c.desconectar();
-        	    c.close();
+        	    conector = new Conector();
+        	    conector.conectar();
+        	    lista.addAll(conector.getFechas(nombreUsuario));
+        	    conector.desconectar();
+        	    conector.close();
         	    Collections.sort(lista, new Comparator<Date>(){
 			public int compare(Date o1, Date o2) {
 			    return o1.compareTo(o2);
 			}
         	    });
-//        	    while(lista.size()>5){
-//        		lista.remove(0);
-//        	    }
+        	    while(lista.size()>5){
+        		lista.remove(0);
+        	    }
         	}catch(Exception e){
         	    System.out.println("Debe estar conectado a la base de datos Redis!!!");
         	}
@@ -361,11 +343,11 @@ public class TestVistaUsuarios extends JFrame {
             
             public listaDeProteinas(String nombreUsuario, String fecha){
         	try{
-        	    c = new Conector();
-        	    c.conectar();
-        	    lista.add(c.getProteinas(nombreUsuario, fecha));
-        	    c.desconectar();
-        	    c.close();
+        	    conector = new Conector();
+        	    conector.conectar();
+        	    lista.add(conector.getProteinas(nombreUsuario, fecha));
+        	    conector.desconectar();
+        	    conector.close();
         	    Collections.sort(lista, Strings.getNaturalComparator());
         	}catch(Exception e){
         	    e.printStackTrace();
