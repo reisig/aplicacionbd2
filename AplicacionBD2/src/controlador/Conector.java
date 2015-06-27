@@ -22,16 +22,35 @@ public class Conector extends Jedis{
 		super(host,puerto);
 	}
 	
-	public void conectar(){
-		if(!this.isConnected())
+	public int conectar(){
+		if(!this.isConnected()){
+		    try{
 			this.connect();
+			if(this.ping().equals("PONG")) 
+			    return 1;
+			else 
+			    return 0;		
+		    }catch(Exception e){
+			return 0;
+		    }
+		}
+		else
+		    return 1;
+	
 	}
 	
-	public void desconectar(){
+	public int desconectar(){
 		if(this.isConnected()){
+		    try{
 			this.disconnect();
 			this.close();
+			    return 1;
+		    }catch(Exception e){
+			return 0;
+		    }	
 		}
+		else 
+		    return 1;
 	}
 	
 	public Set getUsuarios(){

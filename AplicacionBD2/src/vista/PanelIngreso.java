@@ -13,49 +13,91 @@ import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
 
+import org.jasypt.util.text.BasicTextEncryptor;
+
+import controlador.Conector;
+
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+
 public class PanelIngreso extends JPanel implements ActionListener{
 	
 	private static final long serialVersionUID = -5330361553046124052L;
 	private JTextField tfUsuario;
 	private JPasswordField pfContrasena;
 	private JButton btnIngresar;
+	private Conector conector;
 
-	public PanelIngreso() {
-		
-		setLayout(null);
+	public PanelIngreso(Conector c) {
+	    	
+	    	this.conector = c;
+	    
 		setVisible(true);
+		GridBagLayout gridBagLayout = new GridBagLayout();
+		gridBagLayout.columnWidths = new int[]{85, 89, 175, 0, 0};
+		gridBagLayout.rowHeights = new int[]{55, 33, 42, 20, 20, 47, 23, 0, 0};
+		gridBagLayout.columnWeights = new double[]{1.0, 0.0, 1.0, 1.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+		setLayout(gridBagLayout);
 		
 		JLabel titulo = new JLabel("Redis Connect");
 		titulo.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 20));
-		titulo.setBounds(202, 55, 168, 33);
-		add(titulo);
+		GridBagConstraints gbc_titulo = new GridBagConstraints();
+		gbc_titulo.gridwidth = 2;
+		gbc_titulo.fill = GridBagConstraints.VERTICAL;
+		gbc_titulo.insets = new Insets(0, 0, 5, 5);
+		gbc_titulo.gridx = 1;
+		gbc_titulo.gridy = 1;
+		add(titulo, gbc_titulo);
 		
 		JLabel lblUsuario = new JLabel("Usuario: ");
-		lblUsuario.setBounds(118, 133, 67, 14);
-		add(lblUsuario);
-		
-		JLabel lblContrasea = new JLabel("Contrase\u00F1a:");
-		lblContrasea.setBounds(96, 192, 89, 14);
-		add(lblContrasea);
+		GridBagConstraints gbc_lblUsuario = new GridBagConstraints();
+		gbc_lblUsuario.fill = GridBagConstraints.HORIZONTAL;
+		gbc_lblUsuario.insets = new Insets(0, 0, 5, 5);
+		gbc_lblUsuario.gridx = 1;
+		gbc_lblUsuario.gridy = 3;
+		add(lblUsuario, gbc_lblUsuario);
 		
 		tfUsuario = new JTextField();
-		tfUsuario.setBounds(195, 130, 155, 20);
-		add(tfUsuario);
+		GridBagConstraints gbc_tfUsuario = new GridBagConstraints();
+		gbc_tfUsuario.anchor = GridBagConstraints.NORTH;
+		gbc_tfUsuario.fill = GridBagConstraints.HORIZONTAL;
+		gbc_tfUsuario.insets = new Insets(0, 0, 5, 5);
+		gbc_tfUsuario.gridx = 2;
+		gbc_tfUsuario.gridy = 3;
+		add(tfUsuario, gbc_tfUsuario);
 		tfUsuario.setColumns(10);
 		
+		JLabel lblContrasea = new JLabel("Contrase\u00F1a:");
+		GridBagConstraints gbc_lblContrasea = new GridBagConstraints();
+		gbc_lblContrasea.fill = GridBagConstraints.HORIZONTAL;
+		gbc_lblContrasea.insets = new Insets(0, 0, 5, 5);
+		gbc_lblContrasea.gridx = 1;
+		gbc_lblContrasea.gridy = 4;
+		add(lblContrasea, gbc_lblContrasea);
+		
 		pfContrasena = new JPasswordField();
-		pfContrasena.setBounds(195, 189, 155, 20);
-		add(pfContrasena);
+		GridBagConstraints gbc_pfContrasena = new GridBagConstraints();
+		gbc_pfContrasena.anchor = GridBagConstraints.NORTH;
+		gbc_pfContrasena.fill = GridBagConstraints.HORIZONTAL;
+		gbc_pfContrasena.insets = new Insets(0, 0, 5, 5);
+		gbc_pfContrasena.gridx = 2;
+		gbc_pfContrasena.gridy = 4;
+		add(pfContrasena, gbc_pfContrasena);
 		
 		btnIngresar = new JButton("Ingresar");
 		btnIngresar.addActionListener(this);
-		btnIngresar.setBounds(229, 256, 89, 23);
-		add(btnIngresar);
+		GridBagConstraints gbc_btnIngresar = new GridBagConstraints();
+		gbc_btnIngresar.gridwidth = 2;
+		gbc_btnIngresar.insets = new Insets(0, 0, 5, 5);
+		gbc_btnIngresar.anchor = GridBagConstraints.NORTH;
+		gbc_btnIngresar.gridx = 1;
+		gbc_btnIngresar.gridy = 6;
+		add(btnIngresar, gbc_btnIngresar);
 	}
 
 	
-	
-	@SuppressWarnings("deprecation")
 	private boolean comprobarCondiciones(){
 		
 		if (tfUsuario.getText().isEmpty()){
@@ -64,7 +106,7 @@ public class PanelIngreso extends JPanel implements ActionListener{
 			return false;
 		}
 			
-		if (pfContrasena.getText().isEmpty()){
+		if (String.valueOf(pfContrasena.getPassword()).isEmpty()){
 			
 			JOptionPane.showMessageDialog(null,"Por favor ingrese contraseña","Error" ,JOptionPane.ERROR_MESSAGE);	
 			return false;
@@ -73,6 +115,27 @@ public class PanelIngreso extends JPanel implements ActionListener{
 		return true;
 		
 	}
+	
+	private boolean usuarioExiste(String nombre){
+		if(conector.exists(nombre))
+		    return true;
+		else{
+		    return false;
+		}
+	}
+	
+	private boolean contraseñaCorrecta(String nombre, String password){
+	    BasicTextEncryptor encriptador = new BasicTextEncryptor();
+	    encriptador.setPassword(password);
+	    
+	    if(encriptador.decrypt(conector.get(nombre)).equals(password))
+		return true;
+	    
+	    else
+		return false;
+	}
+	
+	
 	
 	
 	public void actionPerformed(ActionEvent e) {
