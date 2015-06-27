@@ -94,7 +94,7 @@ public class Vista extends JFrame {
 	contentPane.add(new PanelCrearUsuario(conector), "PanelCrearUsuario");
 	panelListaUsuarios = new PanelListaUsuarios(conector);
 	contentPane.add(panelListaUsuarios, "PanelListarUsuarios");
-	contentPane.add(new PanelEditarUsuario(), "PanelEditarUsuarios");
+	//contentPane.add(new PanelEditarUsuarios(), "PanelEditarUsuarios");
 	
 	ocultarOpciones();
 	
