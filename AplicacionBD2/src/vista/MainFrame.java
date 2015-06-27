@@ -86,7 +86,7 @@ public class MainFrame extends JFrame {
 	contentPane.add(new PanelIngreso(conector), "PanelInicioSesion");
 	
 	cl = (CardLayout)contentPane.getLayout();
-	contentPane.add(new PanelCrearUsuario(), "PanelCrearUsuario");
+	contentPane.add(new PanelCrearUsuario(conector), "PanelCrearUsuario");
 	contentPane.add(getPanelListarUsuarios(), "PanelListarUsuarios");
 	contentPane.add(getPanelEditarUsuarios(), "PanelEditarUsuarios");
 	
