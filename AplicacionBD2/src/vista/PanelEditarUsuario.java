@@ -1,5 +1,6 @@
 package vista;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,22 +14,25 @@ import javax.swing.JTextField;
 import modelo.Usuario;
 import controlador.Conector;
 
-public class PanelCrearUsuario extends JPanel implements ActionListener {
+public class PanelEditarUsuario extends JPanel implements ActionListener {
 
-	private static final long serialVersionUID = -4934762090157895495L;
-	private JTextField tfUsuario;
+	private static final long serialVersionUID = -6330104928514128414L;
 	private JTextField tfConfirmar;
 	private JTextField tfContrasena;
 	private JButton btnIngresar;
-
-	public PanelCrearUsuario(){
+    private String usuario;
+    private JTextField tfUsuario;
+    private JTextField tfContraseñaActual;
+	
+	public PanelEditarUsuario(String nombreUsuario){
 		
+		usuario = nombreUsuario;
 		setLayout(null);
 		setVisible(true);
 		
-		JLabel titulo = new JLabel("Crear Usuario");
+		JLabel titulo = new JLabel("Editar Contrase\u00F1a");
 		titulo.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 20));
-		titulo.setBounds(199, 45, 163, 33);
+		titulo.setBounds(177, 47, 216, 33);
 		add(titulo);
 		
 		JLabel lblUsuario = new JLabel("Usuario: ");
@@ -36,32 +40,41 @@ public class PanelCrearUsuario extends JPanel implements ActionListener {
 		add(lblUsuario);
 		
 		JLabel lblContrasea = new JLabel("Contrase\u00F1a:");
-		lblContrasea.setBounds(103, 174, 89, 14);
+		lblContrasea.setBounds(103, 205, 89, 14);
 		add(lblContrasea);
+		
+		btnIngresar = new JButton("Guardar");
+		btnIngresar.addActionListener(this);
+		btnIngresar.setBounds(228, 310, 89, 23);
+		add(btnIngresar);
+		
+		JLabel lblConfirmarContasea = new JLabel("Confirmar contase\u00F1a:");
+		lblConfirmarContasea.setBounds(57, 249, 130, 14);
+		add(lblConfirmarContasea);
+		
+		tfConfirmar = new JTextField();
+		tfConfirmar.setBounds(197, 246, 155, 20);
+		add(tfConfirmar);
+		tfConfirmar.setColumns(10);
+		
+		tfContrasena = new JTextField();
+		tfContrasena.setBounds(197, 202, 155, 20);
+		add(tfContrasena);
+		tfContrasena.setColumns(10);
+		
+		JLabel lblContraseaActual = new JLabel("Contrase\u00F1a actual:");
+		lblContraseaActual.setBounds(73, 159, 92, 14);
+		add(lblContraseaActual);
 		
 		tfUsuario = new JTextField();
 		tfUsuario.setBounds(197, 112, 155, 20);
 		add(tfUsuario);
 		tfUsuario.setColumns(10);
 		
-		btnIngresar = new JButton("Guardar");
-		btnIngresar.addActionListener(this);
-		btnIngresar.setBounds(228, 292, 89, 23);
-		add(btnIngresar);
-		
-		JLabel lblConfirmarContasea = new JLabel("Confirmar contase\u00F1a:");
-		lblConfirmarContasea.setBounds(57, 231, 130, 14);
-		add(lblConfirmarContasea);
-		
-		tfConfirmar = new JTextField();
-		tfConfirmar.setBounds(197, 228, 155, 20);
-		add(tfConfirmar);
-		tfConfirmar.setColumns(10);
-		
-		tfContrasena = new JTextField();
-		tfContrasena.setBounds(197, 171, 155, 20);
-		add(tfContrasena);
-		tfContrasena.setColumns(10);
+		tfContraseñaActual = new JTextField();
+		tfContraseñaActual.setBounds(197, 156, 155, 20);
+		add(tfContraseñaActual);
+		tfContraseñaActual.setColumns(10);
 	}
 	
 	
@@ -96,28 +109,20 @@ public class PanelCrearUsuario extends JPanel implements ActionListener {
 		
 	}
 	
-	private void limpiar(){
+	
+	public void CargarUsuario(){
 		
-		tfUsuario.setText("");
-		tfContrasena.setText("");
-		tfConfirmar.setText("");
+		Conector jedis = new Conector();
+		
+		tfUsuario.setText(usuario);
+		//tfContrasena
+		
+		jedis.disconnect();
+		jedis.close();
 		
 	}
 	
-	private boolean existeUsuario(){
-		
-//		if(existe){
-//			
-//			JOptionPane.showMessageDialog(null,"El nombre de usuario ya existe","Información" ,JOptionPane.ERROR_MESSAGE);
-//			return true;
-//		}
-		
-		return false;
-	
-	}
-	
-	
-	public void crearUsuario(){
+	public void EditarUsuario(){
 		
 		Conector jedis = new Conector();
 		Usuario nuevo = new Usuario(tfUsuario.getText(),tfContrasena.getText());
@@ -126,8 +131,6 @@ public class PanelCrearUsuario extends JPanel implements ActionListener {
 		System.out.println(jedis.set(nuevo.getNombre(), nuevo.getContraseñaEncriptada()));
 		jedis.disconnect();
 		jedis.close();
-		
-		JOptionPane.showMessageDialog(null,"Usuario creado correctamente","Información" ,JOptionPane.INFORMATION_MESSAGE);	
 	}
 	
 	
@@ -139,11 +142,7 @@ public class PanelCrearUsuario extends JPanel implements ActionListener {
 			
 			if (comprobarCondiciones()){
 				
-				if(!existeUsuario()){
-					
-					crearUsuario();
-					limpiar();
-				}
+				EditarUsuario();		
 			}
 		}
 	}
