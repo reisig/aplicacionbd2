@@ -10,14 +10,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import modelo.Usuario;
-import controlador.Conector;
+import javax.swing.JPasswordField;
 
 public class PanelEditarUsuario extends JPanel implements ActionListener {
 
 	private static final long serialVersionUID = -6330104928514128414L;
-	private JTextField tfConfirmar;
-	private JTextField tfContrasena;
+	private JPasswordField pfConfirmar;
+	private JPasswordField pfContrasenaNueva;
 	private JButton btnIngresar;
     private String usuario;
     private JTextField tfUsuario;
@@ -26,6 +25,7 @@ public class PanelEditarUsuario extends JPanel implements ActionListener {
 	public PanelEditarUsuario(String nombreUsuario){
 		
 		usuario = nombreUsuario;
+		CargarUsuario();
 		setLayout(null);
 		setVisible(true);
 		
@@ -47,30 +47,32 @@ public class PanelEditarUsuario extends JPanel implements ActionListener {
 		btnIngresar.setBounds(228, 310, 89, 23);
 		add(btnIngresar);
 		
-		JLabel lblConfirmarContasea = new JLabel("Confirmar contase\u00F1a:");
-		lblConfirmarContasea.setBounds(57, 249, 130, 14);
-		add(lblConfirmarContasea);
+		JLabel lblConfirmarContrasena = new JLabel("Confirmar contase\u00F1a:");
+		lblConfirmarContrasena.setBounds(57, 249, 130, 14);
+		add(lblConfirmarContrasena);
 		
-		tfConfirmar = new JTextField();
-		tfConfirmar.setBounds(197, 246, 155, 20);
-		add(tfConfirmar);
-		tfConfirmar.setColumns(10);
+		pfConfirmar = new JPasswordField();
+		pfConfirmar.setBounds(197, 246, 155, 20);
+		add(pfConfirmar);
+		pfConfirmar.setColumns(10);
 		
-		tfContrasena = new JTextField();
-		tfContrasena.setBounds(197, 202, 155, 20);
-		add(tfContrasena);
-		tfContrasena.setColumns(10);
+		pfContrasenaNueva = new JPasswordField();
+		pfContrasenaNueva.setBounds(197, 202, 155, 20);
+		add(pfContrasenaNueva);
+		pfContrasenaNueva.setColumns(10);
 		
 		JLabel lblContraseaActual = new JLabel("Contrase\u00F1a actual:");
 		lblContraseaActual.setBounds(73, 159, 92, 14);
 		add(lblContraseaActual);
 		
 		tfUsuario = new JTextField();
+		tfUsuario.setEditable(false);
 		tfUsuario.setBounds(197, 112, 155, 20);
 		add(tfUsuario);
 		tfUsuario.setColumns(10);
 		
 		tfContraseñaActual = new JTextField();
+		tfContraseñaActual.setEditable(false);
 		tfContraseñaActual.setBounds(197, 156, 155, 20);
 		add(tfContraseñaActual);
 		tfContraseñaActual.setColumns(10);
@@ -85,20 +87,20 @@ public class PanelEditarUsuario extends JPanel implements ActionListener {
 			return false;
 		}
 			
-		if (tfContrasena.getText().isEmpty()){
+		if (String.valueOf(pfContrasenaNueva.getPassword()).isEmpty()){
 			
 			JOptionPane.showMessageDialog(null,"Por favor ingrese contraseña","Error" ,JOptionPane.ERROR_MESSAGE);	
 			return false;
 		}
 		
-		if (tfConfirmar.getText().isEmpty()){
+		if (String.valueOf((pfConfirmar.getPassword())).isEmpty()){
 			
 			JOptionPane.showMessageDialog(null,"Por favor confirme contraseña","Error" ,JOptionPane.ERROR_MESSAGE);	
 			return false;
 		}
 		
 		
-		if ( ! (tfContrasena.getText().equals(tfConfirmar.getText())) ){
+		if ( ! (String.valueOf(pfContrasenaNueva.getPassword()).equals(String.valueOf(pfConfirmar.getPassword())))){
 			
 			JOptionPane.showMessageDialog(null,"Las contraseñas no coinciden","Error" ,JOptionPane.ERROR_MESSAGE);	
 			return false;
@@ -108,28 +110,27 @@ public class PanelEditarUsuario extends JPanel implements ActionListener {
 		
 	}
 	
-	
-	public void CargarUsuario(){
+	public void limpiar() {
 		
-		Conector jedis = new Conector();
+		pfContrasenaNueva.setText("");
+		pfConfirmar.setText("");
+	}
+	
+	
+	private void CargarUsuario(){
 		
 		tfUsuario.setText(usuario);
-		//tfContrasena
-		
-		jedis.disconnect();
-		jedis.close();
+		tfContraseñaActual.setText("contraseñaActual"); //obtener la contraseña de la bd
 		
 	}
 	
-	public void EditarUsuario(){
+	private void EditarContrasena(){
 		
-		Conector jedis = new Conector();
-		Usuario nuevo = new Usuario(tfUsuario.getText(),tfContrasena.getText());
+		System.out.println(usuario);
+		String.valueOf(pfContrasenaNueva.getPassword());
+		String.valueOf(pfConfirmar.getPassword());
 		
-		jedis.conectar();
-		System.out.println(jedis.set(nuevo.getNombre(), nuevo.getContraseñaEncriptada()));
-		jedis.disconnect();
-		jedis.close();
+		JOptionPane.showMessageDialog(null,"Contraseña cambiada correctamente","Información" ,JOptionPane.INFORMATION_MESSAGE);	
 	}
 	
 	
@@ -141,7 +142,9 @@ public class PanelEditarUsuario extends JPanel implements ActionListener {
 			
 			if (comprobarCondiciones()){
 				
-				EditarUsuario();		
+				EditarContrasena();		
+				limpiar();
+				CargarUsuario();
 			}
 		}
 	}
