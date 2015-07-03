@@ -12,12 +12,12 @@ public class TestVista extends JFrame {
 	
 	public TestVista() {
 	
-		setVisible(true);			
-		JPanel panel = new PanelProteinas("Lucho");
-		getContentPane().add(panel, BorderLayout.CENTER);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setSize(600,400);
-		setLocationRelativeTo(null);
+//		setVisible(true);			
+//		JPanel panel = new PanelProteinas("Lucho");
+//		getContentPane().add(panel, BorderLayout.CENTER);
+//		setDefaultCloseOperation(EXIT_ON_CLOSE);
+//		setSize(600,400);
+//		setLocationRelativeTo(null);
 		
 	}
 

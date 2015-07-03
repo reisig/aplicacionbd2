@@ -32,19 +32,11 @@ public class PanelIngreso extends JPanel implements ActionListener{
 	private Conector conector;
 	private Usuario user;
 
-	public Usuario getUser() {
-	    return user;
-	}
 
-
-	public void setUser(Usuario user) {
-	    this.user = user;
-	}
-
-
-	public PanelIngreso(Conector c) {
+	public PanelIngreso(Conector c, Usuario user) {
 	    	
 	    	this.conector = c;
+	    	this.user = user;
 	    
 		setVisible(true);
 		GridBagLayout gridBagLayout = new GridBagLayout();
@@ -145,11 +137,14 @@ public class PanelIngreso extends JPanel implements ActionListener{
 	    BasicTextEncryptor encriptador = new BasicTextEncryptor();
 	    encriptador.setPassword(password);
 	    
-	    if(encriptador.decrypt(conector.get(nombre)).equals(password))
-	    	return true;
-	    else{
-	    	JOptionPane.showMessageDialog(null,"Contraseña incorrecta","Error" ,JOptionPane.ERROR_MESSAGE);
-	    	return false;
+	    try{
+		encriptador.decrypt(conector.get(nombre));
+		JOptionPane.showMessageDialog(null, "Sesión iniciada correctamente.", "Éxito",JOptionPane.INFORMATION_MESSAGE);
+		return true;
+	    }
+	    catch(Exception e){
+		JOptionPane.showMessageDialog(null,"Contraseña incorrecta","Error" ,JOptionPane.ERROR_MESSAGE);
+		return false;
 	    }
 	}
 	
@@ -166,7 +161,9 @@ public class PanelIngreso extends JPanel implements ActionListener{
 				if(usuarioExiste(tfUsuario.getText())){
 					
 					if(contraseñaCorrecta(tfUsuario.getText(),String.valueOf(pfContrasena.getPassword()))){
-						user = new Usuario (tfUsuario.getText());
+						Vista.user = new Usuario (tfUsuario.getText(), String.valueOf(pfContrasena.getPassword()));
+//						System.out
+//							.println(Vista.user);
 						//tela
 					}
 				}

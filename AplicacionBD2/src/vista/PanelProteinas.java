@@ -32,10 +32,12 @@ public class PanelProteinas extends JPanel implements ActionListener {
 	private JButton btnIngresar;
 	private JCalendar calendar;
 	private String usuario;
+	private Conector conector;
 	
-	public PanelProteinas(String usuarioConectado) {
+	public PanelProteinas(Conector c, String usuarioConectado) {
 		
-		usuario = usuarioConectado;
+		this.usuario = usuarioConectado;
+		this.conector = c;
 		
 		setLayout(null);
 		setSize(600,400);
@@ -114,17 +116,14 @@ public class PanelProteinas extends JPanel implements ActionListener {
 
 	public void insertarProteinas() throws ParseException{
 		
-		Conector jedis = new Conector();
 		Usuario nuevo = new Usuario(usuario);
 		DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		
-		jedis.conectar();
-		
+	
 		Date fecha = calendar.getDate();
 		System.out.println("HSET: "+sdf.format(fecha)+", "+nuevo.getNombre()+", "+tfProteinas.getText()+": "+
-					    jedis.hset(sdf.format(fecha), nuevo.getNombre(),tfProteinas.getText()));
-		jedis.disconnect();		
-		jedis.close();
+					    conector.hset(sdf.format(fecha), nuevo.getNombre(),tfProteinas.getText()));
+
 	}
 	
 	
@@ -139,7 +138,6 @@ public class PanelProteinas extends JPanel implements ActionListener {
 				try {
 					insertarProteinas();
 				} catch (ParseException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
