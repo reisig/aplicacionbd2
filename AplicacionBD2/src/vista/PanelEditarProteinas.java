@@ -7,6 +7,9 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -306,6 +309,13 @@ public class PanelEditarProteinas extends JPanel {
 	public JButton getBtnAceptar() {
 		if (btnAceptar == null) {
 			btnAceptar = new JButton("Aceptar");
+			btnAceptar.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+				    DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+				    Date date = calendar.getDate();
+				    String fecha = sdf.format(date);
+				}
+			});
 		}
 		return btnAceptar;
 	}

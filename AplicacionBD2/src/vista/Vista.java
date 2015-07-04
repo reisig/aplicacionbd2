@@ -31,7 +31,7 @@ public class Vista extends JFrame {
     private static final long serialVersionUID = -908688069079632214L;
     public static CardLayout cl;
     public static Usuario user = null;
-    private JPanel contentPane;
+    public JPanel contentPane;
     private JMenuBar menuBar;
     private JMenu mnOpciones;
     private JMenuItem mntmIniciarSesin;
@@ -54,9 +54,11 @@ public class Vista extends JFrame {
     private PanelEditarUsuario panelEditarUsuario;
     private PanelCrearUsuario panelCrearUsuario;
     private PanelEditarProteinas panelEditarProteinas;
+    private PanelProteinas panelProteinas;
     private JMenu mnEditarUsuario;
     private JMenuItem mntmCambiarNombrecontrasea;
     private JMenuItem mntmCambiarFechasproteinas;
+    private JMenuItem mntmAgregarFechasproteinas;
     
     public static void main(String[] args) {
 	EventQueue.invokeLater(new Runnable() {
@@ -81,7 +83,7 @@ public class Vista extends JFrame {
 	
     	setIconImage(Toolkit.getDefaultToolkit().getImage(Vista.class.getResource("/vista/img/redis-icon.png")));
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	setBounds(100, 100, 640, 480);
+	setBounds(100, 100, 800, 600);
 	setJMenuBar(getMenuBar_1());
 	contentPane = new JPanel();
 	contentPane.setBackground(SystemColor.control);
@@ -92,22 +94,23 @@ public class Vista extends JFrame {
 	contentPane.add(getPanelInicio(), "PanelInicio");
 	cl = (CardLayout)contentPane.getLayout();
 	
-	panelIngreso = new PanelIngreso(conector, user);
+	panelIngreso = new PanelIngreso(conector, this);
 	panelListaUsuarios = new PanelListaUsuarios(conector);
-	panelEditarUsuario = new PanelEditarUsuario(conector, null);
+	panelEditarUsuario = new PanelEditarUsuario(conector);
 	panelCrearUsuario = new  PanelCrearUsuario(conector);
 	panelEditarProteinas = new PanelEditarProteinas(conector);
+	panelProteinas = new PanelProteinas(conector,user);
 	
 	contentPane.add(panelEditarProteinas, "PanelEditarProteinas");
 	contentPane.add(panelCrearUsuario, "PanelCrearUsuario");
 	contentPane.add(panelListaUsuarios, "PanelListaUsuarios");
 	contentPane.add(panelEditarUsuario, "PanelEditarUsuarios");
 	contentPane.add(panelIngreso, "PanelInicioSesion");
+	contentPane.add(panelProteinas, "PanelProteinas");
 	
 	setLocationRelativeTo(null);
 	
 	ocultarOpciones();
-	
     }
     
     	public Component getHorizontalGlue() {
@@ -200,9 +203,10 @@ public class Vista extends JFrame {
 					mntmConectarAServidor.setEnabled(false);
 					mntmDesconectar.setEnabled(true);
 					JOptionPane.showMessageDialog(null, "Conexión exitosa!", "Éxito", JOptionPane.INFORMATION_MESSAGE);					
-				    }else{
-					JOptionPane.showMessageDialog(null, "No se ha podido establecer conexión!!");
 				    }
+				    else
+					JOptionPane.showMessageDialog(null, "No se ha podido establecer conexión!!");
+				    
 				   
 				}
 			});
@@ -260,7 +264,7 @@ public class Vista extends JFrame {
 	
 	public JMenuItem getMntmListarUsuarios() {
 		if (mntmListarUsuarios == null) {
-			mntmListarUsuarios = new JMenuItem("Listar Usuarios");
+			mntmListarUsuarios = new JMenuItem("Mostrar Usuarios");
 			mntmListarUsuarios.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 				    panelListaUsuarios.setUsuarios();
@@ -303,6 +307,7 @@ public class Vista extends JFrame {
 	public JMenu getMnEditarUsuario() {
 		if (mnEditarUsuario == null) {
 			mnEditarUsuario = new JMenu("Editar Usuario");
+			mnEditarUsuario.add(getMntmAgregarFechasproteinas());
 			mnEditarUsuario.add(getMntmCambiarNombrecontrasea());
 			mnEditarUsuario.add(getMntmCambiarFechasproteinas());
 		}
@@ -310,11 +315,13 @@ public class Vista extends JFrame {
 	}
 	public JMenuItem getMntmCambiarNombrecontrasea() {
 		if (mntmCambiarNombrecontrasea == null) {
-			mntmCambiarNombrecontrasea = new JMenuItem("Cambiar Nombre/Contrase\u00F1a");
+			mntmCambiarNombrecontrasea = new JMenuItem("Editar Nombre/Contrase\u00F1a");
 			mntmCambiarNombrecontrasea.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-				    if(user!=null)
+				    if(user!=null){
 					cl.show(contentPane, "PanelEditarUsuarios");
+					panelEditarUsuario.setUsuario(Vista.user);
+				    }
 				    else
 					JOptionPane.showMessageDialog(null, "Primero debe Iniciar Sesión", "Error", JOptionPane.ERROR_MESSAGE);
 				}
@@ -324,19 +331,36 @@ public class Vista extends JFrame {
 	}
 	public JMenuItem getMntmCambiarFechasproteinas() {
 		if (mntmCambiarFechasproteinas == null) {
-			mntmCambiarFechasproteinas = new JMenuItem("Cambiar Fechas/Proteinas");
+			mntmCambiarFechasproteinas = new JMenuItem("Editar Fechas/Proteinas");
 			mntmCambiarFechasproteinas.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 				    if(user!=null){
 					cl.show(contentPane, "PanelEditarProteinas");
 					panelEditarProteinas.setUsuario(Vista.user);
-				    }else{
-					JOptionPane.showMessageDialog(null, "Primero debe Iniciar Sesión", "Error", JOptionPane.ERROR_MESSAGE);
 				    }
+				    else
+					JOptionPane.showMessageDialog(null, "Primero debe Iniciar Sesión", "Error", JOptionPane.ERROR_MESSAGE);				    
 				}
 			});
 		}
 		return mntmCambiarFechasproteinas;
+	}
+	public JMenuItem getMntmAgregarFechasproteinas() {
+		if (mntmAgregarFechasproteinas == null) {
+			mntmAgregarFechasproteinas = new JMenuItem("Agregar Fechas/Proteinas");
+			mntmAgregarFechasproteinas.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+				    if(user!=null){
+					cl.show(contentPane, "PanelProteinas");
+					panelProteinas.setUsuario(Vista.user);
+				    }
+				    else
+					JOptionPane.showMessageDialog(null, "Primero debe Iniciar Sesión", "Error", JOptionPane.ERROR_MESSAGE);
+				    
+				}
+			});
+		}
+		return mntmAgregarFechasproteinas;
 	}
 }
 

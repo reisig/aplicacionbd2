@@ -28,7 +28,7 @@ public class Test {
 		listaUsuarios = new ArrayList();
 
 		for (int i = 1; i <= 100; i++) {
-			u = new Usuario("Usuario"+i, "clave"+i);
+			u = new Usuario("usuario"+i, "clave"+i);
 			System.out.println("SET "+u.getNombre()+","+u.getContraseñaEncriptada()+": "+jedis.set(u.getNombre(), u.getContraseñaEncriptada()));
 			for (int j = 0; j < 10; j++) {
 				Date fecha = generarFecha();
@@ -50,6 +50,11 @@ public class Test {
 			dia=28;
 				
 		return df.parse(dia+"/"+mes+"/"+año);
+	}
+	
+	public static void main(String[] args) throws ParseException {
+	    Test t = new Test();
+	    t.generarUsuarios();
 	}
 	
 	

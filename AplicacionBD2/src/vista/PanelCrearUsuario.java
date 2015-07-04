@@ -25,12 +25,13 @@ public class PanelCrearUsuario extends JPanel implements ActionListener {
 	private JPasswordField tfContrasena;
 	private JButton btnIngresar;
 	private Conector conector;
+	private String nombreUsuario; 
 
 	public PanelCrearUsuario(Conector c){ 
 	    	this.conector = c;
 		setVisible(true);
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{57, 135, 165, 0, 0};
+		gridBagLayout.columnWidths = new int[]{57, 135, 165, 0, 0}; 
 		gridBagLayout.rowHeights = new int[]{45, 33, 34, 20, 20, 20, 44, 23, 0, 0};
 		gridBagLayout.columnWeights = new double[]{1.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		gridBagLayout.rowWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
@@ -113,8 +114,7 @@ public class PanelCrearUsuario extends JPanel implements ActionListener {
 	
 	
 	private boolean comprobarCondiciones(){
-		
-		if (tfUsuario.getText().isEmpty()){
+		if (nombreUsuario.isEmpty()){
 			
 			JOptionPane.showMessageDialog(null,"Por favor ingrese usuario","Error" ,JOptionPane.ERROR_MESSAGE);	
 			return false;
@@ -152,7 +152,7 @@ public class PanelCrearUsuario extends JPanel implements ActionListener {
 	}
 	
 	private boolean existeUsuario(){
-	    if(conector.exists(tfUsuario.getText()))
+	    if(conector.exists(nombreUsuario))
 		    return true;
 		else{
 		    return false;
@@ -162,7 +162,7 @@ public class PanelCrearUsuario extends JPanel implements ActionListener {
 	
 	public void crearUsuario(){
 	    
-		Usuario nuevo = new Usuario(tfUsuario.getText(),String.valueOf(tfContrasena.getPassword()));
+		Usuario nuevo = new Usuario(nombreUsuario,String.valueOf(tfContrasena.getPassword()));
 		System.out.println(conector.set(nuevo.getNombre(), nuevo.getContraseñaEncriptada()));		
 		JOptionPane.showMessageDialog(null,"Usuario creado correctamente","Información" ,JOptionPane.INFORMATION_MESSAGE);	
 	}
@@ -171,6 +171,7 @@ public class PanelCrearUsuario extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		
 		Object evento = e.getSource();
+		nombreUsuario = (tfUsuario.getText()).toLowerCase();
 		
 		if (evento == btnIngresar){
 			

@@ -19,6 +19,7 @@ import org.jasypt.util.text.BasicTextEncryptor;
 
 import controlador.Conector;
 
+import java.awt.CardLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -30,13 +31,14 @@ public class PanelIngreso extends JPanel implements ActionListener{
 	private JPasswordField pfContrasena;
 	private JButton btnIngresar;
 	private Conector conector;
-	private Usuario user;
+	private Vista vista;
+	private String nombre;
 
 
-	public PanelIngreso(Conector c, Usuario user) {
+	public PanelIngreso(Conector c, Vista v) {
 	    	
 	    	this.conector = c;
-	    	this.user = user;
+	    	this.vista = v;
 	    
 		setVisible(true);
 		GridBagLayout gridBagLayout = new GridBagLayout();
@@ -83,6 +85,11 @@ public class PanelIngreso extends JPanel implements ActionListener{
 		add(lblContrasea, gbc_lblContrasea);
 		
 		pfContrasena = new JPasswordField();
+		pfContrasena.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			    PanelIngreso.this.actionPerformed(arg0);
+			}
+		});
 		GridBagConstraints gbc_pfContrasena = new GridBagConstraints();
 		gbc_pfContrasena.anchor = GridBagConstraints.NORTH;
 		gbc_pfContrasena.fill = GridBagConstraints.HORIZONTAL;
@@ -105,7 +112,7 @@ public class PanelIngreso extends JPanel implements ActionListener{
 	
 	private boolean comprobarCondiciones(){
 		
-		if (tfUsuario.getText().isEmpty()){
+		if (nombre.isEmpty()){
 			
 			JOptionPane.showMessageDialog(null,"Por favor ingrese usuario","Error" ,JOptionPane.ERROR_MESSAGE);	
 			return false;
@@ -153,18 +160,16 @@ public class PanelIngreso extends JPanel implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		
 		Object evento = e.getSource();
-		
-		if (evento == btnIngresar){
+		nombre = tfUsuario.getText().toLowerCase();
+		if (evento == btnIngresar || evento == pfContrasena){
 			
 			if (comprobarCondiciones()){
 				
-				if(usuarioExiste(tfUsuario.getText())){
+				if(usuarioExiste(nombre)){
 					
-					if(contraseñaCorrecta(tfUsuario.getText(),String.valueOf(pfContrasena.getPassword()))){
-						Vista.user = new Usuario (tfUsuario.getText(), String.valueOf(pfContrasena.getPassword()));
-//						System.out
-//							.println(Vista.user);
-						//tela
+					if(contraseñaCorrecta(nombre,String.valueOf(pfContrasena.getPassword()))){
+						Vista.user = new Usuario (nombre, String.valueOf(pfContrasena.getPassword()));
+						Vista.cl.show(vista.contentPane, "PanelInicio");
 					}
 				}
 			}
