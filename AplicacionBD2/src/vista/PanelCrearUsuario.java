@@ -119,6 +119,13 @@ public class PanelCrearUsuario extends JPanel implements ActionListener {
 			JOptionPane.showMessageDialog(null,"Por favor ingrese usuario","Error" ,JOptionPane.ERROR_MESSAGE);	
 			return false;
 		}
+		
+		if(Character.isDigit(nombreUsuario.charAt(0))){
+		    
+		    JOptionPane.showMessageDialog(null,"El nombre de usuario no puede comenzar con un numero","Error" ,JOptionPane.ERROR_MESSAGE);
+		    return false;
+			    
+		}
 			
 		if (String.valueOf(tfContrasena.getPassword()).isEmpty()){
 			
@@ -152,11 +159,7 @@ public class PanelCrearUsuario extends JPanel implements ActionListener {
 	}
 	
 	private boolean existeUsuario(){
-	    if(conector.exists(nombreUsuario))
-		    return true;
-		else{
-		    return false;
-		}	
+	    return conector.exists(nombreUsuario);
 	}
 	
 	

@@ -10,10 +10,12 @@ import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
@@ -48,7 +50,7 @@ public class PanelEditarProteinas extends JPanel {
     private JLabel lblFechaActual;
     private JLabel lblNombreUsuario;
     private JLabel lblFecha;
-    private JLabel label_1;
+    private JLabel lblNombre;
     private JButton btnAceptar;
     private JButton btnCancelar;
     private JPanel panel_2;
@@ -67,7 +69,7 @@ public class PanelEditarProteinas extends JPanel {
     public void setUsuario(Usuario u){
 	this.usuario = u;
 	nombreUsuario.setText(usuario.getNombre());
-	label_1.setText(nombreUsuario.getText());	
+	lblNombre.setText(nombreUsuario.getText());	
     }
 	public JPanel getPanel_1() {
 		if (panelLista == null) {
@@ -183,8 +185,11 @@ public class PanelEditarProteinas extends JPanel {
 			btnEditarFechas = new JButton("Editar");
 			btnEditarFechas.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-				    cl.show(PanelEditarProteinas.this, "panelEditarFecha");
-				    lblFecha.setText(String.valueOf(listFechas.getSelectedValue()));
+				    	if(String.valueOf(listFechas.getSelectedValue())!="null"){
+        				    cl.show(PanelEditarProteinas.this, "panelEditarFecha");
+        				    lblFecha.setText(String.valueOf(listFechas.getSelectedValue()));
+				    	}
+				   
 				}
 			});
 		}
@@ -193,6 +198,42 @@ public class PanelEditarProteinas extends JPanel {
 	public JButton getBtnEditarProteinas() {
 		if (btnEditarProteinas == null) {
 			btnEditarProteinas = new JButton("Editar");
+			btnEditarProteinas.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+				   String fecha = String.valueOf(listFechas.getSelectedValue());
+				   if(fecha != "null"){
+        				    String nombre = usuario.getNombre();
+        				    String proteinas = JOptionPane.showInputDialog(null, "Ingrese la cantidad de Proteinas");
+        				    if(proteinas!=null){
+                				    if(proteinas.isEmpty()){
+                					JOptionPane.showMessageDialog(null,"Por favor ingrese proteinas",
+                						"Error" ,JOptionPane.ERROR_MESSAGE);	
+                				    }
+                				    else if(!toInt(proteinas)){
+                					JOptionPane.showMessageDialog(null,"Por favor ingrese solo numeros enteros",
+                						"Error",JOptionPane.ERROR_MESSAGE);
+                				    }			
+                				    else{
+                					int numero = Integer.parseInt(proteinas);
+                					if (numero < 0)
+                					    JOptionPane.showMessageDialog(null,"Por favor ingrese solo valores positivos",
+                						    "Error" ,JOptionPane.ERROR_MESSAGE);
+                					else{
+                					    conector.hmset(fecha, new HashMap(){
+								private static final long serialVersionUID = -3933534935193770992L;
+								{
+                						    put(nombre,proteinas);
+                						}						
+                					    });
+                					    JOptionPane.showMessageDialog(null, "Se ha modificado correctamente.", 
+                						    "Mensaje", JOptionPane.INFORMATION_MESSAGE);
+                					}
+                					    
+                				    }
+        				    }
+				   }
+				}
+			});
 		}
 		return btnEditarProteinas;
 	}
@@ -226,48 +267,59 @@ public class PanelEditarProteinas extends JPanel {
 		if (panelEditarFecha == null) {
 			panelEditarFecha = new JPanel();
 			GridBagLayout gbl_panelEditarFecha = new GridBagLayout();
-			gbl_panelEditarFecha.columnWidths = new int[]{0, 69, 58, 176, 54, 0};
-			gbl_panelEditarFecha.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0};
-			gbl_panelEditarFecha.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-			gbl_panelEditarFecha.rowWeights = new double[]{1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+			gbl_panelEditarFecha.columnWidths = new int[]{0, 77, 74, 46, 142, 0, 0};
+			gbl_panelEditarFecha.rowHeights = new int[]{0, 16, 20, 0, 24, 134, 23, 0, 0};
+			gbl_panelEditarFecha.columnWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+			gbl_panelEditarFecha.rowWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 			panelEditarFecha.setLayout(gbl_panelEditarFecha);
 			GridBagConstraints gbc_lblNombreUsuario = new GridBagConstraints();
-			gbc_lblNombreUsuario.gridwidth = 2;
-			gbc_lblNombreUsuario.anchor = GridBagConstraints.EAST;
+			gbc_lblNombreUsuario.anchor = GridBagConstraints.NORTHEAST;
 			gbc_lblNombreUsuario.insets = new Insets(0, 0, 5, 5);
+			gbc_lblNombreUsuario.gridwidth = 3;
 			gbc_lblNombreUsuario.gridx = 1;
 			gbc_lblNombreUsuario.gridy = 1;
 			panelEditarFecha.add(getLabel_1_4(), gbc_lblNombreUsuario);
-			GridBagConstraints gbc_label_1 = new GridBagConstraints();
-			gbc_label_1.insets = new Insets(0, 0, 5, 5);
-			gbc_label_1.gridx = 3;
-			gbc_label_1.gridy = 1;
-			panelEditarFecha.add(getLabel_1(), gbc_label_1);
+			GridBagConstraints gbc_lblNombre = new GridBagConstraints();
+			gbc_lblNombre.anchor = GridBagConstraints.NORTH;
+			gbc_lblNombre.fill = GridBagConstraints.HORIZONTAL;
+			gbc_lblNombre.insets = new Insets(0, 0, 5, 5);
+			gbc_lblNombre.gridx = 4;
+			gbc_lblNombre.gridy = 1;
+			panelEditarFecha.add(getLblNombre(), gbc_lblNombre);
 			GridBagConstraints gbc_lblFechaActual = new GridBagConstraints();
+			gbc_lblFechaActual.fill = GridBagConstraints.BOTH;
 			gbc_lblFechaActual.insets = new Insets(0, 0, 5, 5);
-			gbc_lblFechaActual.gridx = 1;
+			gbc_lblFechaActual.gridx = 2;
 			gbc_lblFechaActual.gridy = 3;
 			panelEditarFecha.add(getLabel_1_3(), gbc_lblFechaActual);
 			GridBagConstraints gbc_lblFecha = new GridBagConstraints();
+			gbc_lblFecha.gridwidth = 2;
 			gbc_lblFecha.anchor = GridBagConstraints.WEST;
+			gbc_lblFecha.fill = GridBagConstraints.VERTICAL;
 			gbc_lblFecha.insets = new Insets(0, 0, 5, 5);
 			gbc_lblFecha.gridx = 3;
 			gbc_lblFecha.gridy = 3;
 			panelEditarFecha.add(getLblFecha(), gbc_lblFecha);
 			GridBagConstraints gbc_lblNuevaFecha = new GridBagConstraints();
+			gbc_lblNuevaFecha.anchor = GridBagConstraints.NORTH;
+			gbc_lblNuevaFecha.fill = GridBagConstraints.HORIZONTAL;
 			gbc_lblNuevaFecha.insets = new Insets(0, 0, 5, 5);
-			gbc_lblNuevaFecha.gridx = 1;
-			gbc_lblNuevaFecha.gridy = 4;
+			gbc_lblNuevaFecha.gridx = 2;
+			gbc_lblNuevaFecha.gridy = 5;
 			panelEditarFecha.add(getLabel_1_2(), gbc_lblNuevaFecha);
 			GridBagConstraints gbc_calendar = new GridBagConstraints();
+			gbc_calendar.anchor = GridBagConstraints.WEST;
+			gbc_calendar.fill = GridBagConstraints.VERTICAL;
 			gbc_calendar.insets = new Insets(0, 0, 5, 5);
-			gbc_calendar.fill = GridBagConstraints.BOTH;
+			gbc_calendar.gridwidth = 2;
 			gbc_calendar.gridx = 3;
-			gbc_calendar.gridy = 4;
+			gbc_calendar.gridy = 5;
 			panelEditarFecha.add(getCalendar(), gbc_calendar);
 			GridBagConstraints gbc_panel_2 = new GridBagConstraints();
 			gbc_panel_2.insets = new Insets(0, 0, 5, 5);
-			gbc_panel_2.fill = GridBagConstraints.BOTH;
+			gbc_panel_2.anchor = GridBagConstraints.NORTH;
+			gbc_panel_2.fill = GridBagConstraints.HORIZONTAL;
+			gbc_panel_2.gridwidth = 2;
 			gbc_panel_2.gridx = 3;
 			gbc_panel_2.gridy = 6;
 			panelEditarFecha.add(getPanel_2(), gbc_panel_2);
@@ -276,7 +328,7 @@ public class PanelEditarProteinas extends JPanel {
 	}
 	public JLabel getLabel_1_2() {
 		if (lblNuevaFecha == null) {
-			lblNuevaFecha = new JLabel("Nueva Fecha :");
+			lblNuevaFecha = new JLabel("Fecha Nueva:");
 		}
 		return lblNuevaFecha;
 	}
@@ -295,16 +347,17 @@ public class PanelEditarProteinas extends JPanel {
 	}
 	public JLabel getLblFecha() {
 		if (lblFecha == null) {
-			lblFecha = new JLabel("");
+			lblFecha = new JLabel("Fecha");
 		}
 		return lblFecha;
 	}
-	public JLabel getLabel_1() {
-		if (label_1 == null) {
-			label_1 = new JLabel();
-			label_1.setFont(new Font("Tahoma", Font.PLAIN, 13));
+	public JLabel getLblNombre() {
+		if (lblNombre == null) {
+			lblNombre = new JLabel();
+			lblNombre.setText("Nombre");
+			lblNombre.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		}
-		return label_1;
+		return lblNombre;
 	}
 	public JButton getBtnAceptar() {
 		if (btnAceptar == null) {
@@ -313,7 +366,21 @@ public class PanelEditarProteinas extends JPanel {
 				public void actionPerformed(ActionEvent e) {
 				    DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 				    Date date = calendar.getDate();
-				    String fecha = sdf.format(date);
+				    String fechaActual = String.valueOf(listFechas.getSelectedValue());
+				    String fechaNueva = sdf.format(date);
+				    String nombre = usuario.getNombre();
+				    if(!conector.hexists(fechaNueva, usuario.getNombre())){
+					String proteinas = conector.hget(fechaActual, nombre);
+					conector.hset(fechaNueva, usuario.getNombre(), proteinas);
+					conector.hdel(fechaActual, nombre);
+					JOptionPane.showMessageDialog(null, "Fecha modificada", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
+					listFechas.setModel(lv.getListaFechas(usuario.getNombre()));
+					cl.show(PanelEditarProteinas.this, "panelListas");
+					
+				    }
+				    else
+					JOptionPane.showMessageDialog(null, "La fecha ingresada ya existe!", "Error", JOptionPane.ERROR_MESSAGE);
+				    
 				}
 			});
 		}
@@ -358,5 +425,19 @@ public class PanelEditarProteinas extends JPanel {
 			calendar = new JCalendar();
 		}
 		return calendar;
+	}
+	
+	private boolean toInt (String entrada){
+		
+		
+		try{	
+			Integer.parseInt(entrada); 
+	     
+		}catch (NumberFormatException e1){
+		
+			return false;
+		}
+		
+		return true;
 	}
 }

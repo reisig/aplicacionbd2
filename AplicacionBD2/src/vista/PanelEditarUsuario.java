@@ -1,27 +1,29 @@
 package vista;
 
+import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 
 import modelo.Usuario;
 
 import org.jasypt.util.text.BasicTextEncryptor;
 
 import controlador.Conector;
-
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import java.awt.FlowLayout;
 
 public class PanelEditarUsuario extends JPanel implements ActionListener {
 
@@ -41,10 +43,12 @@ public class PanelEditarUsuario extends JPanel implements ActionListener {
         private JLabel lblPuedeDejarEl;
         private JPanel panel_1;
         private JButton btnCancelar;
+        private Vista vista;
 	
-	public PanelEditarUsuario(Conector c){
+	public PanelEditarUsuario(Conector c, Vista v){
 		
-	    	this.conector = c;		
+	    	this.conector = c;	
+	    	this.vista = v;
 		
 		setVisible(true);
 		GridBagLayout gridBagLayout = new GridBagLayout();
@@ -211,23 +215,23 @@ public class PanelEditarUsuario extends JPanel implements ActionListener {
 	
 	
 	private boolean comprobarCondiciones(){
+		String pwdActual = String.valueOf(pfContrasenaActual.getPassword());
+		String pwdNueva =  String.valueOf(pfContrasenaNueva.getPassword());
+		String pwdNuevaConfirmar = String.valueOf(pfConfirmar.getPassword());
+		String pwdUsuario = user.getContraseñaDesencriptada();
 		
-		if (tfUsuario.getText().isEmpty()){
-			
-			JOptionPane.showMessageDialog(null,"Por favor ingrese usuario","Error" ,JOptionPane.ERROR_MESSAGE);	
-			return false;
-		}
-		
-		if(String.valueOf(pfContrasenaActual.getPassword()).isEmpty() ||
-		   String.valueOf(pfContrasenaNueva.getPassword()) .isEmpty() ||
-		   String.valueOf((pfConfirmar.getPassword()))	   .isEmpty()){
+		if( (pwdActual.isEmpty() ||
+			pwdNueva .isEmpty() ||
+			pwdNuevaConfirmar.isEmpty()) 			
+		)  {
 		   
 		    JOptionPane.showMessageDialog(null,"Por favor ingrese contraseña","Error" ,JOptionPane.ERROR_MESSAGE);	
 			return false;
 		}		
 		
-		if (!String.valueOf(pfContrasenaActual.getPassword()).equals(user.getContraseñaDesencriptada()) || 
-			!(String.valueOf(pfContrasenaNueva.getPassword()).equals(String.valueOf(pfConfirmar.getPassword())))){
+		if ( (!pwdActual.equals(pwdUsuario) ||
+		     !pwdNueva.equals(pwdNuevaConfirmar)) 
+		   ){
 			
 			JOptionPane.showMessageDialog(null,"Las contraseñas no coinciden","Error" ,JOptionPane.ERROR_MESSAGE);	
 			return false;
@@ -256,19 +260,14 @@ public class PanelEditarUsuario extends JPanel implements ActionListener {
 	}
 	
 	private void EditarContrasena(){
-		
-		System.out.println(user.getNombre());
 		String.valueOf(pfContrasenaNueva.getPassword());
 		String password = String.valueOf(pfConfirmar.getPassword());
 		
 		BasicTextEncryptor enc1 = new BasicTextEncryptor();
 		enc1.setPassword(password);
+
 		
-		BasicTextEncryptor enc2 = new BasicTextEncryptor();
-		String pwdAntigua = conector.get(user.getNombre());
-		
-		
-		System.out.println(conector.getSet(user.getNombre(), enc1.encrypt(password)));
+		conector.getSet(user.getNombre(), enc1.encrypt(password));
 		
 		
 		JOptionPane.showMessageDialog(null,"Contraseña cambiada correctamente","Información" ,JOptionPane.INFORMATION_MESSAGE);	
@@ -293,7 +292,35 @@ public class PanelEditarUsuario extends JPanel implements ActionListener {
 		Object evento = e.getSource();
 		
 		if (evento == btnIngresar){
+		    	String nombreNuevo = textField.getText();
+		    	if (!nombreNuevo.isEmpty() && !Character.isDigit(nombreNuevo.charAt(0)) && !conector.exists(nombreNuevo)) {
+			    String nombreActual = user.getNombre();
+			    List<Date> fechas = conector.getFechas(nombreActual);
+			    DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+			    for (Date d : fechas) {
+				String s = df.format(d);
+				String proteinas = conector.hget(s, nombreActual);
+				conector.hset(s, nombreNuevo, proteinas);
+				conector.hdel(s, nombreActual);
+			    }
 			
+			    conector.del(nombreActual);
+			    conector.set(nombreNuevo, user.getContraseñaEncriptada());
+			    user.setNombre(nombreNuevo);
+			    JOptionPane.showMessageDialog(null, 
+				    "Nombre modificado correctamente", 
+				    "Mensaje", 
+				    JOptionPane.INFORMATION_MESSAGE);
+			    vista.cerrarSesion();
+			    Vista.cl.show(vista.contentPane, "PanelInicio");
+			}else{
+			    JOptionPane.showMessageDialog(null, 
+				    "Por favor verifique las condiciones: "
+				    + "El nombre usuario no debe existir, "
+				    + "tampoco puede comenzar con un numero", 
+				    "Error", 
+				    JOptionPane.ERROR_MESSAGE);
+			}
 			if (comprobarCondiciones()){
 				
 				EditarContrasena();		

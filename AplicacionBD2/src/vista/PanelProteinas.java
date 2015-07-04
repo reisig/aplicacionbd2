@@ -148,8 +148,6 @@ public class PanelProteinas extends JPanel implements ActionListener {
 	public void insertarProteinas() throws ParseException{
 		
 		DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		
-	
 		Date fecha = calendar.getDate();
 		if(conector.hset(sdf.format(fecha), usuario.getNombre(),tfProteinas.getText())==1)
 		    JOptionPane.showMessageDialog(null, "Insertado Correctamente", 

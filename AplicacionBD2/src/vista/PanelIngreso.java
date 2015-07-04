@@ -1,28 +1,24 @@
 package vista;
 
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JLabel;
-
-import java.awt.Font;
-
-import javax.swing.JTextField;
 import javax.swing.JPasswordField;
-import javax.swing.JButton;
+import javax.swing.JTextField;
 
 import modelo.Usuario;
 
 import org.jasypt.util.text.BasicTextEncryptor;
 
 import controlador.Conector;
-
-import java.awt.CardLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
 
 public class PanelIngreso extends JPanel implements ActionListener{
 	
@@ -67,6 +63,11 @@ public class PanelIngreso extends JPanel implements ActionListener{
 		add(lblUsuario, gbc_lblUsuario);
 		
 		tfUsuario = new JTextField();
+		tfUsuario.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			    PanelIngreso.this.actionPerformed(e);
+			}
+		});
 		GridBagConstraints gbc_tfUsuario = new GridBagConstraints();
 		gbc_tfUsuario.anchor = GridBagConstraints.NORTH;
 		gbc_tfUsuario.fill = GridBagConstraints.HORIZONTAL;
@@ -107,6 +108,11 @@ public class PanelIngreso extends JPanel implements ActionListener{
 		gbc_btnIngresar.gridx = 1;
 		gbc_btnIngresar.gridy = 6;
 		add(btnIngresar, gbc_btnIngresar);
+	}
+	
+	private void limpiar (){
+	    tfUsuario.setText("");
+	    pfContrasena.setText("");
 	}
 
 	
@@ -170,6 +176,9 @@ public class PanelIngreso extends JPanel implements ActionListener{
 					if(contraseñaCorrecta(nombre,String.valueOf(pfContrasena.getPassword()))){
 						Vista.user = new Usuario (nombre, String.valueOf(pfContrasena.getPassword()));
 						Vista.cl.show(vista.contentPane, "PanelInicio");
+						vista.mntmCerrarSesin.setEnabled(true);
+						vista.mntmIniciarSesin.setEnabled(false);
+						limpiar();
 					}
 				}
 			}

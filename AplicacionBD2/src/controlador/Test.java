@@ -1,6 +1,5 @@
 package controlador;
 
-import java.awt.EventQueue;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -9,7 +8,6 @@ import java.util.Date;
 import java.util.List;
 
 import modelo.Usuario;
-import vista.PanelListaUsuarios;
 
 public class Test {
 	

@@ -10,6 +10,12 @@ import java.awt.SystemColor;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.ImageIcon;
@@ -34,7 +40,7 @@ public class Vista extends JFrame {
     public JPanel contentPane;
     private JMenuBar menuBar;
     private JMenu mnOpciones;
-    private JMenuItem mntmIniciarSesin;
+    public JMenuItem mntmIniciarSesin;
     private JMenuItem mntmCrearUsuario;
     private JMenuItem mntmListarUsuarios;
     private JLabel lblNewLabel;
@@ -59,6 +65,10 @@ public class Vista extends JFrame {
     private JMenuItem mntmCambiarNombrecontrasea;
     private JMenuItem mntmCambiarFechasproteinas;
     private JMenuItem mntmAgregarFechasproteinas;
+    public JMenuItem mntmCerrarSesin;
+    private JMenu mnTesting;
+    private JMenuItem mntmNewMenuItem;
+    private JMenuItem mntmNewMenuItem_1;
     
     public static void main(String[] args) {
 	EventQueue.invokeLater(new Runnable() {
@@ -96,7 +106,7 @@ public class Vista extends JFrame {
 	
 	panelIngreso = new PanelIngreso(conector, this);
 	panelListaUsuarios = new PanelListaUsuarios(conector);
-	panelEditarUsuario = new PanelEditarUsuario(conector);
+	panelEditarUsuario = new PanelEditarUsuario(conector, this);
 	panelCrearUsuario = new  PanelCrearUsuario(conector);
 	panelEditarProteinas = new PanelEditarProteinas(conector);
 	panelProteinas = new PanelProteinas(conector,user);
@@ -153,6 +163,7 @@ public class Vista extends JFrame {
 			menuBar = new JMenuBar();
 			menuBar.add(getMnArchivo());
 			menuBar.add(getMnOpciones());
+			menuBar.add(getMnTesting());
 			menuBar.add(getMnAyuda());
 			menuBar.add(getHorizontalGlue());
 			menuBar.add(getLblEstado());
@@ -164,6 +175,7 @@ public class Vista extends JFrame {
 		if (mnArchivo == null) {
 			mnArchivo = new JMenu("Archivo");
 			mnArchivo.add(getMntmIniciarSesin());
+			mnArchivo.add(getMntmCerrarSesin());
 			mnArchivo.add(getMntmConectarAServidor());
 			mnArchivo.add(getMntmDesconectar());
 		}
@@ -188,6 +200,16 @@ public class Vista extends JFrame {
 	public JMenuItem getMntmAcercaDe() {
 		if (mntmAcercaDe == null) {
 			mntmAcercaDe = new JMenuItem("Acerca de...");
+			mntmAcercaDe.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+				    JOptionPane.showMessageDialog(null, 
+					    "Trabajo Redis Base de Datos II "
+					    + "by Luis Cuello and "
+					    + "Gonzalo Santander", 
+					    "Mensaje", 
+					    JOptionPane.INFORMATION_MESSAGE);
+				}
+			});
 		}
 		return mntmAcercaDe;
 	}
@@ -202,10 +224,14 @@ public class Vista extends JFrame {
 					mostrarOpciones();
 					mntmConectarAServidor.setEnabled(false);
 					mntmDesconectar.setEnabled(true);
-					JOptionPane.showMessageDialog(null, "Conexión exitosa!", "Éxito", JOptionPane.INFORMATION_MESSAGE);					
+					JOptionPane.showMessageDialog(null, 
+						"Conexión exitosa!", 
+						"Éxito", 
+						JOptionPane.INFORMATION_MESSAGE);					
 				    }
 				    else
-					JOptionPane.showMessageDialog(null, "No se ha podido establecer conexión!!");
+					JOptionPane.showMessageDialog(null, 
+						"No se ha podido establecer conexión!!");
 				    
 				   
 				}
@@ -238,10 +264,13 @@ public class Vista extends JFrame {
 					ocultarOpciones();
 					mntmConectarAServidor.setEnabled(true);
 					mntmDesconectar.setEnabled(false);
-					JOptionPane.showMessageDialog(null, "Desconectado del Servidor", 
-						"Desconectado", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(null, 
+						"Desconectado del Servidor", 
+						"Desconectado", 
+						JOptionPane.INFORMATION_MESSAGE);
 				    }else
-					JOptionPane.showMessageDialog(null, "No se pudo desconectar!!");
+					JOptionPane.showMessageDialog(null, 
+						"No se pudo desconectar!!");
 				}
 			});
 			mntmDesconectar.setEnabled(false);
@@ -297,10 +326,14 @@ public class Vista extends JFrame {
 	private void mostrarOpciones(){
     	    mnOpciones.setEnabled(true);
     	    mntmIniciarSesin.setEnabled(true);
+    	    mnTesting.setEnabled(true);
     	}
 	private void ocultarOpciones(){
     	    mnOpciones.setEnabled(false);
     	    mntmIniciarSesin.setEnabled(false);
+    	    mntmCerrarSesin.setEnabled(false);
+    	    mnTesting.setEnabled(false);
+    	    
     	}
 
 	
@@ -323,7 +356,10 @@ public class Vista extends JFrame {
 					panelEditarUsuario.setUsuario(Vista.user);
 				    }
 				    else
-					JOptionPane.showMessageDialog(null, "Primero debe Iniciar Sesión", "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, 
+						"Primero debe Iniciar Sesión", 
+						"Error", 
+						JOptionPane.ERROR_MESSAGE);
 				}
 			});
 		}
@@ -339,7 +375,10 @@ public class Vista extends JFrame {
 					panelEditarProteinas.setUsuario(Vista.user);
 				    }
 				    else
-					JOptionPane.showMessageDialog(null, "Primero debe Iniciar Sesión", "Error", JOptionPane.ERROR_MESSAGE);				    
+					JOptionPane.showMessageDialog(null, 
+						"Primero debe Iniciar Sesión", 
+						"Error", 
+						JOptionPane.ERROR_MESSAGE);				    
 				}
 			});
 		}
@@ -355,12 +394,119 @@ public class Vista extends JFrame {
 					panelProteinas.setUsuario(Vista.user);
 				    }
 				    else
-					JOptionPane.showMessageDialog(null, "Primero debe Iniciar Sesión", "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, 
+						"Primero debe Iniciar Sesión", 
+						"Error", 
+						JOptionPane.ERROR_MESSAGE);
 				    
 				}
 			});
 		}
 		return mntmAgregarFechasproteinas;
+	}
+	
+	public void cerrarSesion(){
+	    user = null;
+	    JOptionPane.showMessageDialog(null, "Sesión Cerrada");
+	    mntmIniciarSesin.setEnabled(true);
+	    mntmCerrarSesin.setEnabled(false);
+	}
+	public JMenuItem getMntmCerrarSesin() {
+		if (mntmCerrarSesin == null) {
+			mntmCerrarSesin = new JMenuItem("Cerrar Sesi\u00F3n");
+			mntmCerrarSesin.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+				    cerrarSesion();
+				    cl.show(contentPane, "PanelInicio");
+				}
+			});
+		}
+		return mntmCerrarSesin;
+	}
+	public JMenu getMnTesting() {
+		if (mnTesting == null) {
+			mnTesting = new JMenu("Testing");
+			mnTesting.add(getMntmNewMenuItem_1());
+			mnTesting.add(getMntmNewMenuItem());
+		}
+		return mnTesting;
+	}
+	public JMenuItem getMntmNewMenuItem() {
+		if (mntmNewMenuItem == null) {
+			mntmNewMenuItem = new JMenuItem("Generar Usuarios Aleatorios");
+			mntmNewMenuItem.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+				    if(user==null){
+        				    try {
+        					generarUsuarios();
+        					JOptionPane.showMessageDialog(null, 
+        						"Usuarios Generados", 
+        						"Mensaje", 
+        						JOptionPane.INFORMATION_MESSAGE);
+        				    } catch (ParseException e1) {
+        					e1.printStackTrace();
+        				    }
+				    }else
+					JOptionPane.showMessageDialog(null, 
+						"Primero debe cerrar sesión", 
+						"Error", 
+						JOptionPane.ERROR_MESSAGE);
+				}
+			});
+		}
+		return mntmNewMenuItem;
+	}
+	
+	public void generarUsuarios() throws ParseException{
+	    
+		Usuario u = null;
+		List listaUsuarios = new ArrayList();
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+
+		for (int i = 1; i <= 100; i++) {
+			u = new Usuario("usuario"+i, "clave"+i);
+			System.out.println("SET "+u.getNombre()+","+u.getContraseñaEncriptada()+": "+conector.set(u.getNombre(), u.getContraseñaEncriptada()));
+			for (int j = 0; j < 10; j++) {
+				Date fecha = generarFecha();
+				int proteinas = (int) (Math.random() * (300 - 100)) + 100;
+				u.setProteinas(fecha, proteinas);
+				System.out.println("HSET "+u.getNombre()+", "+df.format(fecha)+", "+String.valueOf(u.getProteinas().get(fecha))+": "
+									+conector.hset(df.format(fecha), u.getNombre(), String.valueOf(u.getProteinas().get(fecha))));
+			}
+			listaUsuarios.add(u);
+		}	
+	}
+	
+	public Date generarFecha() throws ParseException{
+	    DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+		int dia = (int) (Math.random() * (31 - 1)) + 1;
+		int mes = (int) (Math.random() * (12 - 1)) + 1;
+		int año = 2015;
+		if( dia>28 && mes==2)
+			dia=28;
+				
+		return df.parse(dia+"/"+mes+"/"+año);
+	}
+	
+	public JMenuItem getMntmNewMenuItem_1() {
+		if (mntmNewMenuItem_1 == null) {
+			mntmNewMenuItem_1 = new JMenuItem("Borrar todos los datos (FLUSHALL)");
+			mntmNewMenuItem_1.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+				    if(user==null){
+					JOptionPane.showMessageDialog(null, 
+						conector.flushAll(), 
+						"Mensaje", 
+						JOptionPane.INFORMATION_MESSAGE);
+				    }else
+					JOptionPane.showMessageDialog(null, 
+						"Primero debe cerrar sesión", 
+						"Error", 
+						JOptionPane.ERROR_MESSAGE);
+				}
+			});
+		}
+		return mntmNewMenuItem_1;
 	}
 }
 
